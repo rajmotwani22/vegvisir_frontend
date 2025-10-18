@@ -112,7 +112,7 @@ function Sidebar({ open, onClose }) {
           boxShadow: ({ boxShadows: { xxl } }) => xxl,
           borderRight: "1px solid",
           borderColor: ({ palette: { grey } }) => grey[200],
-          zIndex: 1200,
+          zIndex: 1250,
         },
       }}
     >
