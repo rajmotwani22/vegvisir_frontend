@@ -51,9 +51,6 @@ function DashboardLayout({ children }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${sidebarOpen ? drawerWidth : 0}px)` },
-          ml: { sm: sidebarOpen ? `${drawerWidth}px` : 0 },
           transition: "margin 0.3s ease",
           position: "relative",
           zIndex: 1,
@@ -66,14 +63,13 @@ function DashboardLayout({ children }) {
           right={0}
           zIndex={1300}
           sx={{
-            width: { sm: `calc(100% - ${sidebarOpen ? drawerWidth : 0}px)` },
-            transition: "width 0.3s ease, left 0.3s ease",
-            p: 2,
+            transition: "left 0.3s ease",
+            p: 1, // Add minimal padding to navbar container
           }}
         >
           <MKBox
             py={1}
-            px={{ xs: 4, sm: 3 }}
+            px={{ xs: 2, sm: 2 }}
             borderRadius="xl"
             shadow="md"
             color="dark"
@@ -150,7 +146,7 @@ function DashboardLayout({ children }) {
         </MKBox>
         <Box
           sx={{
-            mt: 12, // Increased margin to account for navbar with padding
+            mt: 8, // Reduced margin for better spacing
             position: "relative",
             zIndex: 1,
           }}

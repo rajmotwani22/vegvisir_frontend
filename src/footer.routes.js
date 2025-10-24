@@ -5,7 +5,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 
 // Material Kit 2 PRO React components
-import MKTypography from "components/MKTypography";
+import MKTypography from "components/base/MKTypography";
 
 // Images
 import logoCT from "assets/images/logo-ct-dark.png";
