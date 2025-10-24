@@ -16,39 +16,56 @@ Coded by www.creative-tim.com
 // @mui material components
 import Icon from "@mui/material/Icon";
 
-// Home page
-import HomePage from "pages/Home";
-// Login page
-import LoginPage from "pages/Login";
-// Register page
-import RegisterPage from "pages/Register";
-// Reset Password page
-import ResetPasswordPage from "pages/ResetPassword";
+// Dashboard routes for sidebar navigation
+export const dashboardRoutes = [
+  {
+    name: "Home",
+    icon: <Icon>home</Icon>,
+    route: "/home",
+  },
+  {
+    name: "Dashboard",
+    icon: <Icon>dashboard</Icon>,
+    route: "/dashboard",
+  },
+  {
+    name: "Analytics",
+    icon: <Icon>analytics</Icon>,
+    route: "/analytics",
+  },
+  {
+    name: "Users",
+    icon: <Icon>people</Icon>,
+    route: "/users",
+  },
+  {
+    name: "Settings",
+    icon: <Icon>settings</Icon>,
+    route: "/settings",
+  },
+];
 
+// Legacy routes (kept for compatibility)
 const routes = [
   {
     name: "home",
     icon: <Icon>home</Icon>,
     route: "/home",
-    component: <HomePage />,
   },
   {
     name: "login",
     icon: <Icon>login</Icon>,
     route: "/login",
-    component: <LoginPage />,
   },
   {
     name: "register",
     icon: <Icon>person_add</Icon>,
     route: "/register",
-    component: <RegisterPage />,
   },
   {
     name: "reset-password",
     icon: <Icon>lock_reset</Icon>,
     route: "/reset-password",
-    component: <ResetPasswordPage />,
   },
 ];
 

@@ -75,18 +75,6 @@ const menuItems = [
     badge: null,
   },
   {
-    text: "Inventory",
-    icon: <InventoryIcon />,
-    route: "/inventory",
-    badge: null,
-  },
-  {
-    text: "Reports",
-    icon: <AssessmentIcon />,
-    route: "/reports",
-    badge: null,
-  },
-  {
     text: "Settings",
     icon: <SettingsIcon />,
     route: "/settings",

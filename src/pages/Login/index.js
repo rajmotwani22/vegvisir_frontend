@@ -28,10 +28,8 @@ import MKInput from "components/base/MKInput";
 import MKButton from "components/base/MKButton";
 
 // Authentication layout components
-import IllustrationLayout from "layouts/authentication/IllustrationLayout";
 
-// Image
-import bgImage from "assets/images/illustrations/illustration-signin.jpg";
+// Image (now handled by App.js)
 
 function Login() {
   const [rememberMe, setRememberMe] = useState(false);
@@ -39,64 +37,58 @@ function Login() {
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   return (
-    <IllustrationLayout
-      title="Sign In"
-      description="Enter your email and password to sign in"
-      illustration={bgImage}
-    >
-      <MKBox component="form" role="form">
-        <MKBox mb={2}>
-          <MKInput type="email" label="Email" fullWidth />
-        </MKBox>
-        <MKBox mb={2}>
-          <MKInput type="password" label="Password" fullWidth />
-        </MKBox>
-        <MKBox display="flex" alignItems="center" ml={-1}>
-          <Switch checked={rememberMe} onChange={handleSetRememberMe} />
-          <MKTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            onClick={handleSetRememberMe}
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;Remember me
-          </MKTypography>
-        </MKBox>
-        <MKBox mt={4} mb={1}>
-          <MKButton variant="gradient" color="info" size="large" fullWidth>
-            sign in
-          </MKButton>
-        </MKBox>
-        <MKBox mt={2} textAlign="center">
+    <MKBox component="form" role="form">
+      <MKBox mb={2}>
+        <MKInput type="email" label="Email" fullWidth />
+      </MKBox>
+      <MKBox mb={2}>
+        <MKInput type="password" label="Password" fullWidth />
+      </MKBox>
+      <MKBox display="flex" alignItems="center" ml={-1}>
+        <Switch checked={rememberMe} onChange={handleSetRememberMe} />
+        <MKTypography
+          variant="button"
+          fontWeight="regular"
+          color="text"
+          onClick={handleSetRememberMe}
+          sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+        >
+          &nbsp;&nbsp;Remember me
+        </MKTypography>
+      </MKBox>
+      <MKBox mt={4} mb={1}>
+        <MKButton variant="gradient" color="info" size="large" fullWidth>
+          sign in
+        </MKButton>
+      </MKBox>
+      <MKBox mt={2} textAlign="center">
+        <MKTypography
+          component={Link}
+          to="/reset-password"
+          variant="button"
+          color="info"
+          fontWeight="medium"
+          textGradient
+        >
+          Forgot password?
+        </MKTypography>
+      </MKBox>
+      <MKBox mt={3} textAlign="center">
+        <MKTypography variant="button" color="text">
+          Don&apos;t have an account?{" "}
           <MKTypography
             component={Link}
-            to="/reset-password"
+            to="/register"
             variant="button"
             color="info"
             fontWeight="medium"
             textGradient
           >
-            Forgot password?
+            Sign up
           </MKTypography>
-        </MKBox>
-        <MKBox mt={3} textAlign="center">
-          <MKTypography variant="button" color="text">
-            Don&apos;t have an account?{" "}
-            <MKTypography
-              component={Link}
-              to="/register"
-              variant="button"
-              color="info"
-              fontWeight="medium"
-              textGradient
-            >
-              Sign up
-            </MKTypography>
-          </MKTypography>
-        </MKBox>
+        </MKTypography>
       </MKBox>
-    </IllustrationLayout>
+    </MKBox>
   );
 }
 

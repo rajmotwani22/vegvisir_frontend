@@ -23,44 +23,36 @@ import MKInput from "components/base/MKInput";
 import MKButton from "components/base/MKButton";
 
 // Authentication layout components
-import IllustrationLayout from "layouts/authentication/IllustrationLayout";
 
-// Image
-import bgImage from "assets/images/illustrations/illustration-reset.jpg";
+// Image (now handled by App.js)
 
 function ResetPassword() {
   return (
-    <IllustrationLayout
-      title="Reset Password"
-      description="You will receive an e-mail in maximum 60 seconds"
-      illustration={bgImage}
-    >
-      <MKBox component="form" role="form">
-        <MKBox mb={4}>
-          <MKInput type="email" label="Email" fullWidth placeholder="john@email.com" />
-        </MKBox>
-        <MKBox mt={4} mb={1}>
-          <MKButton variant="gradient" color="info" size="large" fullWidth>
-            reset
-          </MKButton>
-        </MKBox>
-        <MKBox mt={3} textAlign="center">
-          <MKTypography variant="button" color="text">
-            Remember your password?{" "}
-            <MKTypography
-              component={Link}
-              to="/login"
-              variant="button"
-              color="info"
-              fontWeight="medium"
-              textGradient
-            >
-              Back to Login
-            </MKTypography>
-          </MKTypography>
-        </MKBox>
+    <MKBox component="form" role="form">
+      <MKBox mb={4}>
+        <MKInput type="email" label="Email" fullWidth placeholder="john@email.com" />
       </MKBox>
-    </IllustrationLayout>
+      <MKBox mt={4} mb={1}>
+        <MKButton variant="gradient" color="info" size="large" fullWidth>
+          reset
+        </MKButton>
+      </MKBox>
+      <MKBox mt={3} textAlign="center">
+        <MKTypography variant="button" color="text">
+          Remember your password?{" "}
+          <MKTypography
+            component={Link}
+            to="/login"
+            variant="button"
+            color="info"
+            fontWeight="medium"
+            textGradient
+          >
+            Back to Login
+          </MKTypography>
+        </MKTypography>
+      </MKBox>
+    </MKBox>
   );
 }
 

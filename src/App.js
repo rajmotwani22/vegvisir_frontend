@@ -25,8 +25,24 @@ import CssBaseline from "@mui/material/CssBaseline";
 // Material Kit 2 PRO React themes
 import theme from "assets/theme";
 
-// Material Kit 2 PRO React routes
-import routes from "routes";
+// Layouts
+import DashboardLayout from "layouts/dashboard/DashboardLayout";
+import IllustrationLayout from "layouts/authentication/IllustrationLayout";
+
+// Pages (without layouts)
+import HomePage from "pages/Home";
+import LoginPage from "pages/Login";
+import RegisterPage from "pages/Register";
+import ResetPasswordPage from "pages/ResetPassword";
+import DashboardPage from "pages/Dashboard";
+import AnalyticsPage from "pages/Analytics";
+import UsersPage from "pages/Users";
+import SettingsPage from "pages/Settings";
+
+// Images
+import signinImage from "assets/images/illustrations/illustration-signin.jpg";
+import signupImage from "assets/images/illustrations/illustration-signup.jpg";
+import resetImage from "assets/images/illustrations/illustration-reset.jpg";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -37,25 +53,64 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
-
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
-
-      return null;
-    });
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/home" />} />
+        {/* Authentication routes with IllustrationLayout */}
+        <Route
+          path="/login"
+          element={
+            <IllustrationLayout
+              title="Sign In"
+              description="Enter your email and password to sign in"
+              illustration={signinImage}
+            >
+              <LoginPage />
+            </IllustrationLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <IllustrationLayout
+              title="Sign Up"
+              description="Enter your details to create your account"
+              illustration={signupImage}
+            >
+              <RegisterPage />
+            </IllustrationLayout>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <IllustrationLayout
+              title="Reset Password"
+              description="You will receive an e-mail in maximum 60 seconds"
+              illustration={resetImage}
+            >
+              <ResetPasswordPage />
+            </IllustrationLayout>
+          }
+        />
+
+        {/* Dashboard routes with DashboardLayout */}
+        <Route
+          path="/*"
+          element={
+            <DashboardLayout>
+              <Routes>
+                <Route path="/home" element={<HomePage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/analytics" element={<AnalyticsPage />} />
+                <Route path="/users" element={<UsersPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/" element={<Navigate to="/home" />} />
+              </Routes>
+            </DashboardLayout>
+          }
+        />
       </Routes>
     </ThemeProvider>
   );

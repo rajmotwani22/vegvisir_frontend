@@ -28,10 +28,8 @@ import MKInput from "components/base/MKInput";
 import MKButton from "components/base/MKButton";
 
 // Authentication layout components
-import IllustrationLayout from "layouts/authentication/IllustrationLayout";
 
-// Image
-import bgImage from "assets/images/illustrations/illustration-signup.jpg";
+// Image (now handled by App.js)
 
 function Register() {
   const [agreeTerms, setAgreeTerms] = useState(false);
@@ -39,68 +37,62 @@ function Register() {
   const handleSetAgreeTerms = () => setAgreeTerms(!agreeTerms);
 
   return (
-    <IllustrationLayout
-      title="Sign Up"
-      description="Enter your details to create your account"
-      illustration={bgImage}
-    >
-      <MKBox component="form" role="form">
-        <MKBox mb={2}>
-          <MKInput type="text" label="Name" fullWidth />
-        </MKBox>
-        <MKBox mb={2}>
-          <MKInput type="email" label="Email" fullWidth />
-        </MKBox>
-        <MKBox mb={2}>
-          <MKInput type="password" label="Password" fullWidth />
-        </MKBox>
-        <MKBox mb={2}>
-          <MKInput type="password" label="Confirm Password" fullWidth />
-        </MKBox>
-        <MKBox display="flex" alignItems="center" ml={-1}>
-          <Switch checked={agreeTerms} onChange={handleSetAgreeTerms} />
-          <MKTypography
-            variant="button"
-            fontWeight="regular"
-            color="text"
-            onClick={handleSetAgreeTerms}
-            sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
-          >
-            &nbsp;&nbsp;I agree the{" "}
-            <MKTypography
-              component="a"
-              href="#"
-              variant="button"
-              fontWeight="bold"
-              color="info"
-              textGradient
-            >
-              Terms and Conditions
-            </MKTypography>
-          </MKTypography>
-        </MKBox>
-        <MKBox mt={4} mb={1}>
-          <MKButton variant="gradient" color="info" size="large" fullWidth>
-            sign up
-          </MKButton>
-        </MKBox>
-        <MKBox mt={3} textAlign="center">
-          <MKTypography variant="button" color="text">
-            Already have an account?{" "}
-            <MKTypography
-              component={Link}
-              to="/login"
-              variant="button"
-              color="info"
-              fontWeight="medium"
-              textGradient
-            >
-              Sign in
-            </MKTypography>
-          </MKTypography>
-        </MKBox>
+    <MKBox component="form" role="form">
+      <MKBox mb={2}>
+        <MKInput type="text" label="Name" fullWidth />
       </MKBox>
-    </IllustrationLayout>
+      <MKBox mb={2}>
+        <MKInput type="email" label="Email" fullWidth />
+      </MKBox>
+      <MKBox mb={2}>
+        <MKInput type="password" label="Password" fullWidth />
+      </MKBox>
+      <MKBox mb={2}>
+        <MKInput type="password" label="Confirm Password" fullWidth />
+      </MKBox>
+      <MKBox display="flex" alignItems="center" ml={-1}>
+        <Switch checked={agreeTerms} onChange={handleSetAgreeTerms} />
+        <MKTypography
+          variant="button"
+          fontWeight="regular"
+          color="text"
+          onClick={handleSetAgreeTerms}
+          sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
+        >
+          &nbsp;&nbsp;I agree the{" "}
+          <MKTypography
+            component="a"
+            href="#"
+            variant="button"
+            fontWeight="bold"
+            color="info"
+            textGradient
+          >
+            Terms and Conditions
+          </MKTypography>
+        </MKTypography>
+      </MKBox>
+      <MKBox mt={4} mb={1}>
+        <MKButton variant="gradient" color="info" size="large" fullWidth>
+          sign up
+        </MKButton>
+      </MKBox>
+      <MKBox mt={3} textAlign="center">
+        <MKTypography variant="button" color="text">
+          Already have an account?{" "}
+          <MKTypography
+            component={Link}
+            to="/login"
+            variant="button"
+            color="info"
+            fontWeight="medium"
+            textGradient
+          >
+            Sign in
+          </MKTypography>
+        </MKTypography>
+      </MKBox>
+    </MKBox>
   );
 }
 
