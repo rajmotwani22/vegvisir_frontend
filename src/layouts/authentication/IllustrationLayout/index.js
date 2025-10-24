@@ -27,7 +27,6 @@ import MKTypography from "components/base/MKTypography";
 import DefaultNavbar from "components/custom/DefaultNavbar";
 
 // Material Kit 2 PRO React page layout routes
-import routes from "routes";
 
 function IllustrationLayout({
   header = "",
@@ -40,7 +39,6 @@ function IllustrationLayout({
     <MKBox width="100%" height="100%" bgColor="white">
       <MKBox position="absolute" width="100%" mt={1}>
         <DefaultNavbar
-          routes={routes}
           action={{
             type: "external",
             route: "https://www.creative-tim.com/product/material-kit-pro-react",
