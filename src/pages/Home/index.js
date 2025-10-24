@@ -121,8 +121,16 @@ function Home() {
               height: "100%",
               background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
               color: "white",
-              borderRadius: 2,
-              boxShadow: "0 8px 32px rgba(102, 126, 234, 0.3)",
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
+              },
             }}
           >
             <TrendingUpIcon sx={{ fontSize: 40, mb: 1 }} />
@@ -142,8 +150,16 @@ function Home() {
               height: "100%",
               background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
               color: "white",
-              borderRadius: 2,
-              boxShadow: "0 8px 32px rgba(240, 147, 251, 0.3)",
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
+              },
             }}
           >
             <AnalyticsIcon sx={{ fontSize: 40, mb: 1 }} />
@@ -163,8 +179,16 @@ function Home() {
               height: "100%",
               background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
               color: "white",
-              borderRadius: 2,
-              boxShadow: "0 8px 32px rgba(79, 172, 254, 0.3)",
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
+              },
             }}
           >
             <AssessmentIcon sx={{ fontSize: 40, mb: 1 }} />
@@ -184,8 +208,16 @@ function Home() {
               height: "100%",
               background: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
               color: "white",
-              borderRadius: 2,
-              boxShadow: "0 8px 32px rgba(67, 233, 123, 0.3)",
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
+              },
             }}
           >
             <PeopleIcon sx={{ fontSize: 40, mb: 1 }} />
@@ -206,13 +238,16 @@ function Home() {
             sx={{
               p: 4,
               height: "100%",
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              border: "1px solid rgba(0,0,0,0.05)",
-              transition: "all 0.3s ease",
+              backgroundColor: ({ palette: { white } }) => white.main,
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
               "&:hover": {
-                transform: "translateY(-4px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
               },
             }}
           >
@@ -255,13 +290,16 @@ function Home() {
             sx={{
               p: 4,
               height: "100%",
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              border: "1px solid rgba(0,0,0,0.05)",
-              transition: "all 0.3s ease",
+              backgroundColor: ({ palette: { white } }) => white.main,
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
               "&:hover": {
-                transform: "translateY(-4px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
               },
             }}
           >
@@ -304,13 +342,16 @@ function Home() {
             sx={{
               p: 4,
               height: "100%",
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              border: "1px solid rgba(0,0,0,0.05)",
-              transition: "all 0.3s ease",
+              backgroundColor: ({ palette: { white } }) => white.main,
+              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
+              boxShadow: ({ boxShadows: { md } }) => md,
+              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
+                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
+              overflow: "visible",
+              transition: "all 200ms ease-out",
               "&:hover": {
-                transform: "translateY(-4px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                transform: "translateY(-2px)",
+                boxShadow: ({ boxShadows: { lg } }) => lg,
               },
             }}
           >

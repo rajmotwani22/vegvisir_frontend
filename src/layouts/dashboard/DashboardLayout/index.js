@@ -23,9 +23,20 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Divider from "@mui/material/Divider";
 
 // @mui icons
 import MenuIcon from "@mui/icons-material/Menu";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PersonIcon from "@mui/icons-material/Person";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import SecurityIcon from "@mui/icons-material/Security";
+import HelpIcon from "@mui/icons-material/Help";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 // Material Kit 2 PRO React components
 import MKBox from "components/base/MKBox";
@@ -39,15 +50,27 @@ const drawerWidth = 240;
 
 function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
+  const settingsOpen = Boolean(settingsAnchorEl);
 
   const handleSidebarToggle = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const handleSettingsClick = (event) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
-      <Sidebar open={sidebarOpen} onClose={handleSidebarToggle} />
+      <Sidebar id="dashboard-sidebar" open={sidebarOpen} onClose={handleSidebarToggle} />
+
       <Box
+        id="dashboard-main-content"
         component="main"
         sx={{
           flexGrow: 1,
@@ -57,6 +80,7 @@ function DashboardLayout({ children }) {
         }}
       >
         <MKBox
+          id="dashboard-top-navbar"
           position="fixed"
           top={0}
           left={{ sm: sidebarOpen ? `${drawerWidth}px` : 0 }}
@@ -64,23 +88,36 @@ function DashboardLayout({ children }) {
           zIndex={1300}
           sx={{
             transition: "left 0.3s ease",
-            p: 1, // Add minimal padding to navbar container
+            p: 1,
           }}
         >
           <MKBox
+            id="dashboard-navbar-content"
             py={1}
-            px={{ xs: 2, sm: 2 }}
+            px={{ xs: 4, sm: 2, lg: 2 }}
+            my={2}
+            mx={3}
+            width="calc(100% - 48px)"
             borderRadius="xl"
             shadow="md"
             color="dark"
-            sx={({ palette: { transparent: transparentColor, white }, functions: { rgba } }) => ({
+            position="absolute"
+            left={0}
+            zIndex={3}
+            sx={({ palette: { white }, functions: { rgba } }) => ({
               backgroundColor: rgba(white.main, 0.8),
               backdropFilter: `saturate(200%) blur(30px)`,
             })}
           >
-            <MKBox display="flex" justifyContent="space-between" alignItems="center">
-              <MKBox display="flex" alignItems="center">
+            <MKBox
+              id="dashboard-navbar-layout"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <MKBox id="dashboard-navbar-left" display="flex" alignItems="center">
                 <IconButton
+                  id="dashboard-sidebar-toggle"
                   color="inherit"
                   aria-label="open drawer"
                   edge="start"
@@ -94,18 +131,25 @@ function DashboardLayout({ children }) {
                     },
                     borderRadius: 2,
                     p: 1,
+                    transition: "all 200ms ease-out",
                   }}
                 >
                   <MenuIcon />
                 </IconButton>
 
-                <MKTypography variant="button" fontWeight="bold" color="dark">
+                <MKTypography
+                  id="dashboard-page-title"
+                  variant="button"
+                  fontWeight="bold"
+                  color="dark"
+                >
                   Dashboard
                 </MKTypography>
               </MKBox>
 
-              <MKBox display="flex" alignItems="center" gap={2}>
+              <MKBox id="dashboard-navbar-right" display="flex" alignItems="center" gap={2}>
                 <MKBox
+                  id="dashboard-user-welcome"
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -116,6 +160,7 @@ function DashboardLayout({ children }) {
                     "&:hover": {
                       backgroundColor: "rgba(0,0,0,0.08)",
                     },
+                    transition: "all 200ms ease-out",
                   }}
                 >
                   <MKTypography variant="body2" color="text.secondary" mr={1}>
@@ -127,6 +172,8 @@ function DashboardLayout({ children }) {
                 </MKBox>
 
                 <IconButton
+                  id="dashboard-settings-button"
+                  onClick={handleSettingsClick}
                   sx={{
                     backgroundColor: "rgba(0,0,0,0.04)",
                     "&:hover": {
@@ -134,20 +181,171 @@ function DashboardLayout({ children }) {
                     },
                     borderRadius: 2,
                     p: 1,
+                    transition: "all 200ms ease-out",
                   }}
                 >
-                  <MKTypography variant="body2" color="text.primary">
-                    ⚙️
-                  </MKTypography>
+                  <SettingsIcon />
                 </IconButton>
+
+                <Menu
+                  id="settings-menu"
+                  anchorEl={settingsAnchorEl}
+                  open={settingsOpen}
+                  onClose={handleSettingsClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      borderRadius: ({ borders: { borderRadius } }) => borderRadius.lg,
+                      boxShadow: ({ boxShadows: { md } }) => md,
+                      minWidth: 220,
+                      mt: 1,
+                      border: ({ borders: { borderWidth }, palette: { grey } }) =>
+                        `${borderWidth[0]} solid ${grey[200]}`,
+                      background: ({ palette: { white } }) => white.main,
+                      "& .MuiMenuItem-root": {
+                        px: 2,
+                        py: 1.25,
+                        borderRadius: ({ borders: { borderRadius } }) => borderRadius.md,
+                        mx: 0.75,
+                        my: 0.25,
+                        transition: "all 200ms ease-out",
+                        "&:hover": {
+                          backgroundColor: ({ palette: { primary } }) => primary.light + "10",
+                          transform: "translateX(2px)",
+                        },
+                        "&:first-of-type": {
+                          mt: 0.5,
+                        },
+                        "&:last-of-type": {
+                          mb: 0.5,
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem
+                    onClick={handleSettingsClose}
+                    sx={{
+                      "&:hover .MuiListItemIcon-root": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <PersonIcon fontSize="small" color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Profile"
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 500,
+                      }}
+                    />
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={handleSettingsClose}
+                    sx={{
+                      "&:hover .MuiListItemIcon-root": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <NotificationsIcon fontSize="small" color="info" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Notifications"
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 500,
+                      }}
+                    />
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={handleSettingsClose}
+                    sx={{
+                      "&:hover .MuiListItemIcon-root": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <SecurityIcon fontSize="small" color="warning" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Security"
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 500,
+                      }}
+                    />
+                  </MenuItem>
+
+                  <Divider sx={{ my: 0.75, mx: 0.75 }} />
+
+                  <MenuItem
+                    onClick={handleSettingsClose}
+                    sx={{
+                      "&:hover .MuiListItemIcon-root": {
+                        transform: "scale(1.1)",
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <HelpIcon fontSize="small" color="success" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Help & Support"
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 500,
+                      }}
+                    />
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={handleSettingsClose}
+                    sx={{
+                      color: ({ palette: { error } }) => error.main,
+                      "&:hover": {
+                        backgroundColor: ({ palette: { error } }) => error.light + "10",
+                        "& .MuiListItemIcon-root": {
+                          transform: "scale(1.1)",
+                        },
+                      },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 36 }}>
+                      <LogoutIcon fontSize="small" color="error" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Logout"
+                      primaryTypographyProps={{
+                        variant: "body2",
+                        fontWeight: 500,
+                        color: "inherit",
+                      }}
+                    />
+                  </MenuItem>
+                </Menu>
               </MKBox>
             </MKBox>
           </MKBox>
         </MKBox>
         <Box
+          id="dashboard-page-content"
           sx={{
             mt: 8,
-            pt: 3,
+            pt: 5,
             pb: 12,
             position: "relative",
             zIndex: 1,
@@ -157,7 +355,9 @@ function DashboardLayout({ children }) {
         >
           {children}
         </Box>
+
         <MKBox
+          id="dashboard-footer"
           sx={{
             boxShadow: ({ boxShadows: { sm } }) => sm,
             backgroundColor: ({ palette: { grey } }) => grey[50],

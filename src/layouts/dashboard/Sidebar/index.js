@@ -75,23 +75,24 @@ function Sidebar({ open, onClose }) {
           width: drawerWidth,
           boxSizing: "border-box",
           backgroundColor: ({ palette: { white } }) => white.main,
-          boxShadow: ({ boxShadows: { xxl } }) => xxl,
+          boxShadow: ({ boxShadows: { lg } }) => lg,
           borderRight: "1px solid",
           borderColor: ({ palette: { grey } }) => grey[200],
+          borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
           zIndex: 1250,
         },
       }}
     >
       <MKBox
         sx={{
+          background: ({ palette: { info } }) =>
+            `linear-gradient(135deg, ${info.main} 0%, ${info.dark} 100%)`,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           px: 3,
           py: 2,
           minHeight: 72,
-          background: ({ palette: { info } }) =>
-            `linear-gradient(135deg, ${info.main} 0%, ${info.dark} 100%)`,
           color: "white",
           boxShadow: ({ boxShadows: { md } }) => md,
         }}
@@ -139,7 +140,7 @@ function Sidebar({ open, onClose }) {
                   my: 0.25,
                   borderRadius: 2,
                   minHeight: 48,
-                  transition: "all 0.2s ease-in-out",
+                  transition: "all 200ms ease-out",
                   "&.Mui-selected": {
                     backgroundColor: ({ palette: { info } }) => info.main,
                     color: "white",
