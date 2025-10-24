@@ -146,15 +146,23 @@ function DashboardLayout({ children }) {
         </MKBox>
         <Box
           sx={{
-            mt: 8, // Reduced margin for better spacing
+            mt: 8,
             pt: 3,
+            pb: 12,
             position: "relative",
             zIndex: 1,
+            minHeight: "100vh",
+            backgroundColor: ({ palette: { grey } }) => grey[50],
           }}
         >
           {children}
         </Box>
-        <MKBox mt="auto" pt={6}>
+        <MKBox
+          sx={{
+            boxShadow: ({ boxShadows: { sm } }) => sm,
+            backgroundColor: ({ palette: { grey } }) => grey[50],
+          }}
+        >
           <CenteredFooter />
         </MKBox>
       </Box>
