@@ -64,6 +64,8 @@ function DashboardLayout({ children }) {
         analytics: "Analytics",
         users: "Users",
         settings: "Settings",
+        "data-tables": "Data Tables",
+        notifications: "Notifications",
       };
 
       const label = labelMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1);

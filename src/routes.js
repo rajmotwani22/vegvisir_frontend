@@ -43,4 +43,14 @@ export const dashboardRoutes = [
     icon: <Icon>settings</Icon>,
     route: "/settings",
   },
+  {
+    name: "Data Tables",
+    icon: <Icon>table_chart</Icon>,
+    route: "/data-tables",
+  },
+  {
+    name: "Notifications",
+    icon: <Icon>notifications</Icon>,
+    route: "/notifications",
+  },
 ];

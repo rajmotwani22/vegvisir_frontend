@@ -38,6 +38,8 @@ import DashboardPage from "pages/Dashboard";
 import AnalyticsPage from "pages/Analytics";
 import UsersPage from "pages/Users";
 import SettingsPage from "pages/Settings";
+import DataTablesPage from "pages/DataTables";
+import NotificationsPage from "pages/Notifications";
 
 // Images
 import signinImage from "assets/images/illustrations/illustration-signin.jpg";
@@ -106,6 +108,8 @@ export default function App() {
                 <Route path="/analytics" element={<AnalyticsPage />} />
                 <Route path="/users" element={<UsersPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/data-tables" element={<DataTablesPage />} />
+                <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/" element={<Navigate to="/home" />} />
               </Routes>
             </DashboardLayout>
