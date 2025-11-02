@@ -39,6 +39,7 @@ import TablePagination from "@mui/material/TablePagination";
 // @mui icons
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import Icon from "@mui/material/Icon";
 
 // Material Kit 2 PRO React components
 import MKBox from "components/base/MKBox";
@@ -46,6 +47,7 @@ import MKTypography from "components/base/MKTypography";
 import MKButton from "components/base/MKButton";
 import MKAvatar from "components/base/MKAvatar";
 import MKBadge from "components/base/MKBadge";
+import MKSnackbar from "components/base/MKSnackbar";
 
 // Sample data
 const initialData = [
@@ -152,6 +154,31 @@ function DataTables() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    color: "info",
+    icon: "info",
+    title: "",
+    dateTime: "now",
+    content: "",
+  });
+
+  const showSnackbar = (color, icon, title, content) => {
+    setSnackbar({
+      open: true,
+      color,
+      icon,
+      title,
+      dateTime: "now",
+      content,
+    });
+  };
+
+  const closeSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
+  };
+
   // Handle sorting
   const handleRequestSort = (property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -219,6 +246,25 @@ function DataTables() {
     setOrderBy("");
     setOrder("asc");
     setPage(0);
+    showSnackbar(
+      "info",
+      "filter_alt",
+      "Filters Cleared",
+      "All filters have been reset to default values."
+    );
+  };
+
+  const handleEdit = (row) => {
+    showSnackbar("success", "edit", "Edit Action", `Editing user: ${row.name}`);
+  };
+
+  const handleAddNew = () => {
+    showSnackbar(
+      "success",
+      "add",
+      "Add New Entry",
+      "Opening form to add a new entry to the table."
+    );
   };
 
   const getStatusColor = (status) => {
@@ -233,7 +279,7 @@ function DataTables() {
           <MKTypography variant="h4" fontWeight="bold">
             Data Tables
           </MKTypography>
-          <MKButton variant="gradient" color="info" size="large">
+          <MKButton variant="gradient" color="info" size="large" onClick={handleAddNew}>
             Add New Entry
           </MKButton>
         </MKBox>
@@ -634,6 +680,7 @@ function DataTables() {
                         variant="text"
                         color="info"
                         size="small"
+                        onClick={() => handleEdit(row)}
                         sx={{
                           margin: 0,
                           minWidth: "auto",
@@ -661,6 +708,18 @@ function DataTables() {
           rowsPerPageOptions={[5, 10, 25, 50]}
         />
       </Card>
+
+      {/* Snackbar */}
+      <MKSnackbar
+        color={snackbar.color}
+        icon={<Icon>{snackbar.icon}</Icon>}
+        title={snackbar.title}
+        content={snackbar.content}
+        dateTime={snackbar.dateTime}
+        open={snackbar.open}
+        close={closeSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      />
     </Container>
   );
 }
