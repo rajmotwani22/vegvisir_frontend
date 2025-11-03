@@ -116,13 +116,18 @@ function Sidebar({ open, onClose }) {
           <IconButton
             onClick={onClose}
             sx={{
-              color: "white",
+              color: "white !important",
+              backgroundColor: "rgba(255,255,255,0.1)",
               "&:hover": {
-                backgroundColor: "rgba(255,255,255,0.1)",
+                backgroundColor: "rgba(255,255,255,0.2)",
+                color: "white !important",
+              },
+              "& .MuiSvgIcon-root": {
+                color: "white !important",
               },
             }}
           >
-            <CloseIcon />
+            <CloseIcon sx={{ color: "white !important" }} />
           </IconButton>
         </Tooltip>
       </MKBox>
@@ -143,19 +148,23 @@ function Sidebar({ open, onClose }) {
                   transition: "all 200ms ease-out",
                   "&.Mui-selected": {
                     backgroundColor: ({ palette: { info } }) => info.main,
-                    color: "white",
+                    color: "white !important",
                     boxShadow: ({ boxShadows: { sm } }) => sm,
                     transform: "translateX(4px)",
                     "&:hover": {
                       backgroundColor: ({ palette: { info } }) => info.dark,
                       transform: "translateX(4px)",
+                      color: "white !important",
                     },
                     "& .MuiListItemIcon-root": {
-                      color: "white",
+                      color: "white !important",
                     },
                     "& .MuiListItemText-primary": {
-                      color: "white",
+                      color: "white !important",
                       fontWeight: 600,
+                    },
+                    "& .MuiTypography-root": {
+                      color: "white !important",
                     },
                   },
                   "&:hover": {
@@ -167,7 +176,7 @@ function Sidebar({ open, onClose }) {
               >
                 <ListItemIcon
                   sx={{
-                    color: location.pathname === item.route ? "white" : "text.secondary",
+                    color: location.pathname === item.route ? "white !important" : "text.secondary",
                     minWidth: 44,
                     justifyContent: "center",
                   }}
@@ -177,10 +186,11 @@ function Sidebar({ open, onClose }) {
                 <ListItemText
                   primary={item.text}
                   sx={{
-                    color: location.pathname === item.route ? "white" : "text.primary",
+                    color: location.pathname === item.route ? "white !important" : "text.primary",
                     fontWeight: location.pathname === item.route ? 600 : 400,
                     "& .MuiTypography-root": {
                       fontSize: "0.875rem",
+                      color: location.pathname === item.route ? "white !important" : "inherit",
                     },
                   }}
                 />
