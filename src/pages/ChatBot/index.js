@@ -114,40 +114,49 @@ function ChatBot() {
   };
 
   return (
-    <Container>
-      <MKBox mb={6}>
-        <MKBox display="flex" alignItems="center" gap={2} mb={2}>
+    <Container
+      sx={{
+        height: "calc(100vh - 200px)",
+        display: "flex",
+        flexDirection: "column",
+        py: 1,
+        px: { xs: 2, sm: 3 },
+      }}
+    >
+      <MKBox mb={1}>
+        <MKBox display="flex" alignItems="center" gap={1.5}>
           <MKAvatar
             sx={{
-              width: 48,
-              height: 48,
+              width: 36,
+              height: 36,
               bgcolor: "primary.main",
             }}
           >
-            <SmartToyIcon />
+            <SmartToyIcon sx={{ fontSize: 20 }} />
           </MKAvatar>
           <MKBox>
-            <MKTypography variant="h4" fontWeight="bold">
+            <MKTypography variant="h5" fontWeight="bold">
               AI Chat Assistant
             </MKTypography>
-            <MKTypography variant="body2" color="text" sx={{ opacity: 0.7 }}>
+            <MKTypography variant="caption" color="text" sx={{ opacity: 0.7 }}>
               Chat with an AI assistant powered by LLM
             </MKTypography>
           </MKBox>
         </MKBox>
       </MKBox>
 
-      <Card sx={{ height: "calc(100vh - 280px)", display: "flex", flexDirection: "column" }}>
+      <Card sx={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
         {/* Messages Area */}
         <MKBox
           sx={{
             flex: 1,
             overflowY: "auto",
-            p: 3,
+            p: 1.5,
             display: "flex",
             flexDirection: "column",
-            gap: 2,
+            gap: 1,
             backgroundColor: ({ palette: { grey } }) => grey[50],
+            minHeight: 0,
           }}
         >
           {messages.length === 0 ? (
@@ -160,18 +169,18 @@ function ChatBot() {
             >
               <MKAvatar
                 sx={{
-                  width: 80,
-                  height: 80,
+                  width: 56,
+                  height: 56,
                   bgcolor: "primary.main",
-                  mb: 2,
+                  mb: 1.5,
                 }}
               >
-                <SmartToyIcon sx={{ fontSize: 40 }} />
+                <SmartToyIcon sx={{ fontSize: 28 }} />
               </MKAvatar>
-              <MKTypography variant="h5" fontWeight="medium" mb={1}>
+              <MKTypography variant="h6" fontWeight="medium" mb={0.5}>
                 Start a conversation
               </MKTypography>
-              <MKTypography variant="body2" color="text" sx={{ opacity: 0.7, maxWidth: 400 }}>
+              <MKTypography variant="caption" color="text" sx={{ opacity: 0.7, maxWidth: 400 }}>
                 Ask me anything! I&apos;m here to help you with questions, explanations, coding
                 help, or just chat.
               </MKTypography>
@@ -182,52 +191,65 @@ function ChatBot() {
                 key={index}
                 display="flex"
                 justifyContent={message.role === "user" ? "flex-end" : "flex-start"}
-                gap={1.5}
+                gap={1}
               >
                 {message.role === "assistant" && (
                   <MKAvatar
                     sx={{
-                      width: 32,
-                      height: 32,
+                      width: 24,
+                      height: 24,
                       bgcolor: "primary.main",
                       flexShrink: 0,
+                      mt: 0.5,
                     }}
                   >
-                    <SmartToyIcon fontSize="small" />
+                    <SmartToyIcon sx={{ fontSize: 14 }} />
                   </MKAvatar>
                 )}
 
                 <MKBox
                   sx={{
-                    maxWidth: "70%",
-                    p: 2,
-                    borderRadius: 2,
+                    maxWidth: "75%",
+                    p: 1.25,
+                    borderRadius: 1.5,
                     backgroundColor:
                       message.role === "user"
-                        ? ({ palette: { primary } }) => primary.main
+                        ? "#1565c0" // Dark blue for good contrast with white text
                         : "white",
-                    color: message.role === "user" ? "white" : "text.primary",
+                    color: message.role === "user" ? "white !important" : "text.primary",
+                    fontWeight: message.role === "user" ? 500 : 400,
                     boxShadow: 1,
+                    "& *": {
+                      color: message.role === "user" ? "white !important" : "inherit",
+                      fontWeight: message.role === "user" ? "500 !important" : "inherit",
+                    },
                     "& p": {
                       margin: 0,
-                      marginBottom: 1,
+                      marginBottom: 0.75,
+                      color: message.role === "user" ? "white !important" : "inherit",
+                      fontWeight: message.role === "user" ? "500 !important" : "inherit",
                       "&:last-child": {
                         marginBottom: 0,
                       },
                     },
                     "& ul, & ol": {
                       margin: 0,
-                      paddingLeft: 2,
-                      marginBottom: 1,
+                      paddingLeft: 1.5,
+                      marginBottom: 0.75,
+                      color: message.role === "user" ? "white !important" : "inherit",
                     },
                     "& li": {
-                      marginBottom: 0.5,
+                      marginBottom: 0.25,
+                      color: message.role === "user" ? "white !important" : "inherit",
+                      fontWeight: message.role === "user" ? "500 !important" : "inherit",
                     },
                     "& strong": {
                       fontWeight: "bold",
+                      color: message.role === "user" ? "white !important" : "inherit",
                     },
                     "& em": {
                       fontStyle: "italic",
+                      color: message.role === "user" ? "white !important" : "inherit",
                     },
                     "& code": {
                       backgroundColor:
@@ -236,6 +258,8 @@ function ChatBot() {
                       borderRadius: 1,
                       fontSize: "0.875em",
                       fontFamily: "monospace",
+                      color: message.role === "user" ? "white !important" : "inherit",
+                      fontWeight: message.role === "user" ? "500 !important" : "inherit",
                     },
                     "& pre": {
                       backgroundColor:
@@ -244,20 +268,23 @@ function ChatBot() {
                       borderRadius: 1,
                       overflow: "auto",
                       marginBottom: 1,
+                      color: message.role === "user" ? "white !important" : "inherit",
                       "& code": {
                         backgroundColor: "transparent",
                         padding: 0,
+                        color: message.role === "user" ? "white !important" : "inherit",
                       },
                     },
                     // KaTeX math styling
                     "& .katex": {
                       fontSize: "1.1em",
-                      color: "inherit",
+                      color: message.role === "user" ? "white !important" : "inherit",
                     },
                     "& .katex-display": {
                       margin: "1em 0",
                       overflowX: "auto",
                       overflowY: "hidden",
+                      color: message.role === "user" ? "white !important" : "inherit",
                     },
                   }}
                 >
@@ -273,7 +300,10 @@ function ChatBot() {
                             sx={{
                               wordBreak: "break-word",
                               color: "inherit",
-                              marginBottom: 1,
+                              marginBottom: 0.75,
+                              fontSize: "0.875rem",
+                              lineHeight: 1.5,
+                              fontWeight: 400,
                               "&:last-child": { marginBottom: 0 },
                             }}
                           >
@@ -300,12 +330,18 @@ function ChatBot() {
                           </MKTypography>
                         ),
                         ul: ({ children }) => (
-                          <MKBox component="ul" sx={{ margin: 0, paddingLeft: 2, marginBottom: 1 }}>
+                          <MKBox
+                            component="ul"
+                            sx={{ margin: 0, paddingLeft: 1.5, marginBottom: 0.75 }}
+                          >
                             {children}
                           </MKBox>
                         ),
                         ol: ({ children }) => (
-                          <MKBox component="ol" sx={{ margin: 0, paddingLeft: 2, marginBottom: 1 }}>
+                          <MKBox
+                            component="ol"
+                            sx={{ margin: 0, paddingLeft: 1.5, marginBottom: 0.75 }}
+                          >
                             {children}
                           </MKBox>
                         ),
@@ -313,7 +349,13 @@ function ChatBot() {
                           <MKTypography
                             component="li"
                             variant="body2"
-                            sx={{ color: "inherit", marginBottom: 0.5, wordBreak: "break-word" }}
+                            sx={{
+                              color: "inherit",
+                              marginBottom: 0.25,
+                              wordBreak: "break-word",
+                              fontSize: "0.875rem",
+                              lineHeight: 1.5,
+                            }}
                           >
                             {children}
                           </MKTypography>
@@ -373,28 +415,29 @@ function ChatBot() {
                         },
                         h1: ({ children }) => (
                           <MKTypography
-                            variant="h5"
+                            variant="h6"
                             component="h1"
-                            sx={{ color: "inherit", marginBottom: 1 }}
+                            sx={{ color: "inherit", marginBottom: 0.75, fontSize: "1.1rem" }}
                           >
                             {children}
                           </MKTypography>
                         ),
                         h2: ({ children }) => (
                           <MKTypography
-                            variant="h6"
+                            variant="body1"
                             component="h2"
-                            sx={{ color: "inherit", marginBottom: 1 }}
+                            fontWeight="bold"
+                            sx={{ color: "inherit", marginBottom: 0.75, fontSize: "1rem" }}
                           >
                             {children}
                           </MKTypography>
                         ),
                         h3: ({ children }) => (
                           <MKTypography
-                            variant="body1"
+                            variant="body2"
                             component="h3"
                             fontWeight="bold"
-                            sx={{ color: "inherit", marginBottom: 1 }}
+                            sx={{ color: "inherit", marginBottom: 0.75, fontSize: "0.9375rem" }}
                           >
                             {children}
                           </MKTypography>
@@ -406,13 +449,20 @@ function ChatBot() {
                   ) : (
                     <MKTypography
                       variant="body2"
-                      sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                      sx={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        fontSize: "0.875rem",
+                        lineHeight: 1.5,
+                        color: "white",
+                        fontWeight: 500,
+                      }}
                     >
                       {message.content}
                     </MKTypography>
                   )}
                   {message.files && message.files.length > 0 && (
-                    <MKBox mt={1} display="flex" flexDirection="column" gap={0.5}>
+                    <MKBox mt={0.75} display="flex" flexDirection="column" gap={0.5}>
                       {message.files.map((file, fileIndex) => (
                         <MKBox
                           key={fileIndex}
@@ -424,14 +474,34 @@ function ChatBot() {
                             borderRadius: 1,
                             backgroundColor:
                               message.role === "user" ? "rgba(255,255,255,0.1)" : "grey.100",
+                            color: message.role === "user" ? "white !important" : "inherit",
+                            "& *": {
+                              color: message.role === "user" ? "white !important" : "inherit",
+                            },
                           }}
                         >
-                          <InsertDriveFileIcon fontSize="small" />
-                          <MKTypography variant="caption" sx={{ flex: 1, wordBreak: "break-word" }}>
+                          <InsertDriveFileIcon
+                            fontSize="small"
+                            sx={{ color: message.role === "user" ? "white !important" : "inherit" }}
+                          />
+                          <MKTypography
+                            variant="caption"
+                            sx={{
+                              flex: 1,
+                              wordBreak: "break-word",
+                              color: message.role === "user" ? "white !important" : "inherit",
+                            }}
+                          >
                             {file.name || file.fileName}
                           </MKTypography>
                           {file.size && (
-                            <MKTypography variant="caption" sx={{ opacity: 0.7 }}>
+                            <MKTypography
+                              variant="caption"
+                              sx={{
+                                opacity: message.role === "user" ? 0.9 : 0.7,
+                                color: message.role === "user" ? "white !important" : "inherit",
+                              }}
+                            >
                               {(file.size / 1024).toFixed(1)} KB
                             </MKTypography>
                           )}
@@ -444,13 +514,14 @@ function ChatBot() {
                 {message.role === "user" && (
                   <MKAvatar
                     sx={{
-                      width: 32,
-                      height: 32,
+                      width: 24,
+                      height: 24,
                       bgcolor: "secondary.main",
                       flexShrink: 0,
+                      mt: 0.5,
                     }}
                   >
-                    <PersonIcon fontSize="small" />
+                    <PersonIcon sx={{ fontSize: 14 }} />
                   </MKAvatar>
                 )}
               </MKBox>
@@ -458,30 +529,35 @@ function ChatBot() {
           )}
 
           {loading && (
-            <MKBox display="flex" justifyContent="flex-start" gap={1.5}>
+            <MKBox display="flex" justifyContent="flex-start" gap={1}>
               <MKAvatar
                 sx={{
-                  width: 32,
-                  height: 32,
+                  width: 24,
+                  height: 24,
                   bgcolor: "primary.main",
                   flexShrink: 0,
+                  mt: 0.5,
                 }}
               >
-                <SmartToyIcon fontSize="small" />
+                <SmartToyIcon sx={{ fontSize: 14 }} />
               </MKAvatar>
               <MKBox
                 sx={{
-                  p: 2,
-                  borderRadius: 2,
+                  p: 1.25,
+                  borderRadius: 1.5,
                   backgroundColor: "white",
                   boxShadow: 1,
                   display: "flex",
                   alignItems: "center",
-                  gap: 1,
+                  gap: 0.75,
                 }}
               >
-                <CircularProgress size={16} />
-                <MKTypography variant="body2" color="text.secondary">
+                <CircularProgress size={14} />
+                <MKTypography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ fontSize: "0.8125rem" }}
+                >
                   Thinking...
                 </MKTypography>
               </MKBox>
@@ -494,7 +570,7 @@ function ChatBot() {
         {/* Input Area */}
         <MKBox
           sx={{
-            p: 2,
+            p: 1.5,
             borderTop: ({ borders: { borderWidth, borderColor } }) =>
               `${borderWidth[1]} solid ${borderColor}`,
             backgroundColor: "white",
@@ -502,7 +578,7 @@ function ChatBot() {
         >
           {/* Attached Files Preview */}
           {attachedFiles.length > 0 && (
-            <MKBox mb={2} display="flex" flexWrap="wrap" gap={1}>
+            <MKBox mb={1.5} display="flex" flexWrap="wrap" gap={0.75}>
               {attachedFiles.map((file, index) => (
                 <MKBox
                   key={index}
@@ -510,13 +586,13 @@ function ChatBot() {
                   alignItems="center"
                   gap={1}
                   sx={{
-                    p: 1,
+                    p: 0.75,
                     borderRadius: 1,
                     backgroundColor: "grey.100",
                     maxWidth: "200px",
                   }}
                 >
-                  <InsertDriveFileIcon fontSize="small" color="primary" />
+                  <InsertDriveFileIcon sx={{ fontSize: 16 }} color="primary" />
                   <MKTypography
                     variant="caption"
                     sx={{
@@ -541,11 +617,11 @@ function ChatBot() {
             </MKBox>
           )}
 
-          <MKBox display="flex" gap={2} alignItems="flex-end">
+          <MKBox display="flex" gap={1.5} alignItems="flex-end">
             <TextField
               fullWidth
               multiline
-              maxRows={4}
+              maxRows={3}
               placeholder="Type your message..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
@@ -553,9 +629,11 @@ function ChatBot() {
               disabled={loading}
               inputRef={inputRef}
               variant="outlined"
+              size="small"
               sx={{
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: ({ palette: { grey } }) => grey[50],
+                  fontSize: "0.875rem",
                 },
               }}
             />
@@ -570,23 +648,25 @@ function ChatBot() {
               color="secondary"
               onClick={() => fileInputRef.current?.click()}
               disabled={loading}
+              size="small"
               sx={{
                 bgcolor: "grey.200",
                 "&:hover": {
                   bgcolor: "grey.300",
                 },
-                height: "56px",
-                width: "56px",
+                height: "40px",
+                width: "40px",
               }}
               title="Attach file"
             >
-              <AttachFileIcon />
+              <AttachFileIcon sx={{ fontSize: 20 }} />
             </IconButton>
-            <MKBox display="flex" flexDirection="column" gap={1}>
+            <MKBox display="flex" flexDirection="column" gap={0.5}>
               <IconButton
                 color="primary"
                 onClick={handleSend}
                 disabled={loading || (!inputMessage.trim() && attachedFiles.length === 0)}
+                size="small"
                 sx={{
                   bgcolor: "primary.main",
                   color: "white",
@@ -597,11 +677,15 @@ function ChatBot() {
                     bgcolor: ({ palette: { grey } }) => grey[300],
                     color: ({ palette: { grey } }) => grey[500],
                   },
-                  height: "56px",
-                  width: "56px",
+                  height: "40px",
+                  width: "40px",
                 }}
               >
-                {loading ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
+                {loading ? (
+                  <CircularProgress size={18} color="inherit" />
+                ) : (
+                  <SendIcon sx={{ fontSize: 20 }} />
+                )}
               </IconButton>
               {messages.length > 0 && (
                 <MKButton
@@ -612,7 +696,7 @@ function ChatBot() {
                     clearMessages();
                     setAttachedFiles([]);
                   }}
-                  sx={{ minWidth: "auto", px: 1 }}
+                  sx={{ minWidth: "auto", px: 0.5, py: 0.25, fontSize: "0.75rem" }}
                 >
                   Clear
                 </MKButton>
