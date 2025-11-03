@@ -51,6 +51,9 @@ import ClearIcon from "@mui/icons-material/Clear";
 import MKBox from "components/base/MKBox";
 import MKTypography from "components/base/MKTypography";
 
+// Core config
+import { STORAGE_KEYS, ROUTES } from "core/config";
+
 const drawerWidth = 240;
 
 function Navbar({ sidebarOpen, onSidebarToggle }) {
@@ -71,22 +74,34 @@ function Navbar({ sidebarOpen, onSidebarToggle }) {
       id: 1,
       title: "Dashboard Overview",
       type: "page",
-      route: "/dashboard",
+      route: ROUTES.DASHBOARD,
       category: "Analytics",
     },
-    { id: 2, title: "User Management", type: "page", route: "/users", category: "Management" },
-    { id: 3, title: "Analytics Reports", type: "page", route: "/analytics", category: "Analytics" },
-    { id: 4, title: "Settings", type: "page", route: "/settings", category: "Configuration" },
-    { id: 5, title: "Profile Settings", type: "feature", route: "/settings", category: "User" },
+    { id: 2, title: "User Management", type: "page", route: ROUTES.USERS, category: "Management" },
+    {
+      id: 3,
+      title: "Analytics Reports",
+      type: "page",
+      route: ROUTES.ANALYTICS,
+      category: "Analytics",
+    },
+    { id: 4, title: "Settings", type: "page", route: ROUTES.SETTINGS, category: "Configuration" },
+    { id: 5, title: "Profile Settings", type: "feature", route: ROUTES.SETTINGS, category: "User" },
     {
       id: 6,
       title: "Notification Center",
       type: "feature",
-      route: "/dashboard",
+      route: ROUTES.DASHBOARD,
       category: "System",
     },
-    { id: 7, title: "Data Export", type: "feature", route: "/analytics", category: "Tools" },
-    { id: 8, title: "User Permissions", type: "feature", route: "/users", category: "Security" },
+    { id: 7, title: "Data Export", type: "feature", route: ROUTES.ANALYTICS, category: "Tools" },
+    {
+      id: 8,
+      title: "User Permissions",
+      type: "feature",
+      route: ROUTES.USERS,
+      category: "Security",
+    },
   ];
 
   const handleSettingsClick = (event) => {
@@ -124,7 +139,7 @@ function Navbar({ sidebarOpen, onSidebarToggle }) {
         5
       );
       setRecentSearches(newRecent);
-      localStorage.setItem("recentSearches", JSON.stringify(newRecent));
+      localStorage.setItem(STORAGE_KEYS.RECENT_SEARCHES, JSON.stringify(newRecent));
 
       // Navigate to first result or show all results
       if (searchResults.length > 0) {
@@ -151,7 +166,7 @@ function Navbar({ sidebarOpen, onSidebarToggle }) {
 
   // Load recent searches on component mount
   useEffect(() => {
-    const saved = localStorage.getItem("recentSearches");
+    const saved = localStorage.getItem(STORAGE_KEYS.RECENT_SEARCHES);
     if (saved) {
       setRecentSearches(JSON.parse(saved));
     }

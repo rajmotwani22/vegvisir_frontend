@@ -22,6 +22,9 @@ import MKTypography from "components/base/MKTypography";
 import MKInput from "components/base/MKInput";
 import MKButton from "components/base/MKButton";
 
+// Core config
+import { ROUTES } from "core/config";
+
 // Authentication layout components
 
 // Image (now handled by App.js)
@@ -42,7 +45,7 @@ function ResetPassword() {
           Remember your password?{" "}
           <MKTypography
             component={Link}
-            to="/login"
+            to={ROUTES.LOGIN}
             variant="button"
             color="info"
             fontWeight="medium"

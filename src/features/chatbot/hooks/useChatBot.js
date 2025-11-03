@@ -47,7 +47,7 @@ export const useChatBot = () => {
         const assistantMsg = {
           role: "assistant",
           content: response.data.response,
-          timestamp: response.data.timestamp || new Date().toISOString(),
+          timestamp: response.data.timestamp,
         };
 
         setMessages((prev) => [...prev, assistantMsg]);

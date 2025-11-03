@@ -16,46 +16,49 @@ Coded by www.creative-tim.com
 // @mui material components
 import Icon from "@mui/material/Icon";
 
+// Core config
+import { ROUTES } from "core/config";
+
 // Dashboard routes for sidebar navigation
 export const dashboardRoutes = [
   {
     name: "Home",
     icon: <Icon>home</Icon>,
-    route: "/home",
+    route: ROUTES.HOME,
   },
   {
     name: "Dashboard",
     icon: <Icon>dashboard</Icon>,
-    route: "/dashboard",
+    route: ROUTES.DASHBOARD,
   },
   {
     name: "Analytics",
     icon: <Icon>analytics</Icon>,
-    route: "/analytics",
+    route: ROUTES.ANALYTICS,
   },
   {
     name: "Users",
     icon: <Icon>people</Icon>,
-    route: "/users",
+    route: ROUTES.USERS,
   },
   {
     name: "Settings",
     icon: <Icon>settings</Icon>,
-    route: "/settings",
+    route: ROUTES.SETTINGS,
   },
   {
     name: "Data Tables",
     icon: <Icon>table_chart</Icon>,
-    route: "/data-tables",
+    route: ROUTES.DATA_TABLES,
   },
   {
     name: "Notifications",
     icon: <Icon>notifications</Icon>,
-    route: "/notifications",
+    route: ROUTES.NOTIFICATIONS,
   },
   {
     name: "ChatBot",
     icon: <Icon>smart_toy</Icon>,
-    route: "/chatbot",
+    route: ROUTES.CHATBOT,
   },
 ];

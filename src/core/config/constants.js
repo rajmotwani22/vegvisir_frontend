@@ -7,7 +7,7 @@
 
 export const API_CONFIG = {
   // eslint-disable-next-line no-undef
-  BASE_URL: process.env.REACT_APP_API_URL || "http://localhost:3001/api",
+  BASE_URL: process.env.REACT_APP_API_URL || "http://localhost:8000",
   TIMEOUT: 10000,
 };
 
@@ -19,10 +19,11 @@ export const STORAGE_KEYS = {
 };
 
 export const ROUTES = {
-  HOME: "/",
+  HOME: "/home",
   DASHBOARD: "/dashboard",
   LOGIN: "/login",
   REGISTER: "/register",
+  RESET_PASSWORD: "/reset-password",
   USERS: "/users",
   ANALYTICS: "/analytics",
   DATA_TABLES: "/data-tables",

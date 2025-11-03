@@ -27,6 +27,7 @@ import theme from "assets/theme";
 
 // Core
 import { AuthProvider } from "core/context";
+import { ROUTES } from "core/config";
 
 // Layouts
 import DashboardLayout from "layouts/dashboard/DashboardLayout";
@@ -66,7 +67,7 @@ export default function App() {
         <Routes>
           {/* Authentication routes with IllustrationLayout */}
           <Route
-            path="/login"
+            path={ROUTES.LOGIN}
             element={
               <IllustrationLayout
                 title="Sign In"
@@ -78,7 +79,7 @@ export default function App() {
             }
           />
           <Route
-            path="/register"
+            path={ROUTES.REGISTER}
             element={
               <IllustrationLayout
                 title="Sign Up"
@@ -90,7 +91,7 @@ export default function App() {
             }
           />
           <Route
-            path="/reset-password"
+            path={ROUTES.RESET_PASSWORD}
             element={
               <IllustrationLayout
                 title="Reset Password"
@@ -108,15 +109,15 @@ export default function App() {
             element={
               <DashboardLayout>
                 <Routes>
-                  <Route path="/home" element={<HomePage />} />
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/analytics" element={<AnalyticsPage />} />
-                  <Route path="/users" element={<UsersPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/data-tables" element={<DataTablesPage />} />
-                  <Route path="/notifications" element={<NotificationsPage />} />
-                  <Route path="/chatbot" element={<ChatBotPage />} />
-                  <Route path="/" element={<Navigate to="/home" />} />
+                  <Route path={ROUTES.HOME} element={<HomePage />} />
+                  <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+                  <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+                  <Route path={ROUTES.USERS} element={<UsersPage />} />
+                  <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+                  <Route path={ROUTES.DATA_TABLES} element={<DataTablesPage />} />
+                  <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+                  <Route path={ROUTES.CHATBOT} element={<ChatBotPage />} />
+                  <Route path="/" element={<Navigate to={ROUTES.HOME} />} />
                 </Routes>
               </DashboardLayout>
             }

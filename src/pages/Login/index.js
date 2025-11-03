@@ -37,6 +37,9 @@ import { useLogin } from "features/auth";
 // Shared hooks
 import { useSnackbar } from "shared/hooks";
 
+// Core config
+import { ROUTES } from "core/config";
+
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -174,7 +177,7 @@ function Login() {
             Don&apos;t have an account?{" "}
             <MKTypography
               component={Link}
-              to="/register"
+              to={ROUTES.REGISTER}
               variant="button"
               color="info"
               fontWeight="medium"

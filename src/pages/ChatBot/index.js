@@ -6,6 +6,10 @@
 */
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 
 // @mui material components
 import Container from "@mui/material/Container";
@@ -204,14 +208,209 @@ function ChatBot() {
                         : "white",
                     color: message.role === "user" ? "white" : "text.primary",
                     boxShadow: 1,
+                    "& p": {
+                      margin: 0,
+                      marginBottom: 1,
+                      "&:last-child": {
+                        marginBottom: 0,
+                      },
+                    },
+                    "& ul, & ol": {
+                      margin: 0,
+                      paddingLeft: 2,
+                      marginBottom: 1,
+                    },
+                    "& li": {
+                      marginBottom: 0.5,
+                    },
+                    "& strong": {
+                      fontWeight: "bold",
+                    },
+                    "& em": {
+                      fontStyle: "italic",
+                    },
+                    "& code": {
+                      backgroundColor:
+                        message.role === "user" ? "rgba(255,255,255,0.2)" : "grey.200",
+                      padding: "2px 4px",
+                      borderRadius: 1,
+                      fontSize: "0.875em",
+                      fontFamily: "monospace",
+                    },
+                    "& pre": {
+                      backgroundColor:
+                        message.role === "user" ? "rgba(255,255,255,0.2)" : "grey.200",
+                      padding: 1,
+                      borderRadius: 1,
+                      overflow: "auto",
+                      marginBottom: 1,
+                      "& code": {
+                        backgroundColor: "transparent",
+                        padding: 0,
+                      },
+                    },
+                    // KaTeX math styling
+                    "& .katex": {
+                      fontSize: "1.1em",
+                      color: "inherit",
+                    },
+                    "& .katex-display": {
+                      margin: "1em 0",
+                      overflowX: "auto",
+                      overflowY: "hidden",
+                    },
                   }}
                 >
-                  <MKTypography
-                    variant="body2"
-                    sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-                  >
-                    {message.content}
-                  </MKTypography>
+                  {message.role === "assistant" ? (
+                    <ReactMarkdown
+                      remarkPlugins={[[remarkMath, { singleDollarTextMath: false }]]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={{
+                        p: ({ children }) => (
+                          <MKTypography
+                            variant="body2"
+                            component="p"
+                            sx={{
+                              wordBreak: "break-word",
+                              color: "inherit",
+                              marginBottom: 1,
+                              "&:last-child": { marginBottom: 0 },
+                            }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        strong: ({ children }) => (
+                          <MKTypography
+                            component="strong"
+                            variant="body2"
+                            fontWeight="bold"
+                            sx={{ color: "inherit" }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        em: ({ children }) => (
+                          <MKTypography
+                            component="em"
+                            variant="body2"
+                            sx={{ fontStyle: "italic", color: "inherit" }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        ul: ({ children }) => (
+                          <MKBox component="ul" sx={{ margin: 0, paddingLeft: 2, marginBottom: 1 }}>
+                            {children}
+                          </MKBox>
+                        ),
+                        ol: ({ children }) => (
+                          <MKBox component="ol" sx={{ margin: 0, paddingLeft: 2, marginBottom: 1 }}>
+                            {children}
+                          </MKBox>
+                        ),
+                        li: ({ children }) => (
+                          <MKTypography
+                            component="li"
+                            variant="body2"
+                            sx={{ color: "inherit", marginBottom: 0.5, wordBreak: "break-word" }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        code: ({ children, className }) => {
+                          // Check if this is a math code block (from remark-math)
+                          const isMath =
+                            className?.includes("language-math") ||
+                            className?.includes("language-katex");
+                          const isInline = !className || className.startsWith("language-");
+
+                          // For math expressions, let rehype-katex handle it
+                          if (isMath) {
+                            return <span>{children}</span>;
+                          }
+
+                          if (isInline && !className?.startsWith("language-")) {
+                            return (
+                              <MKBox
+                                component="code"
+                                sx={{
+                                  backgroundColor: "rgba(0,0,0,0.1)",
+                                  padding: "2px 4px",
+                                  borderRadius: 1,
+                                  fontSize: "0.875em",
+                                  fontFamily: "monospace",
+                                  color: "inherit",
+                                }}
+                              >
+                                {children}
+                              </MKBox>
+                            );
+                          }
+                          return (
+                            <MKBox
+                              component="pre"
+                              sx={{
+                                backgroundColor: "rgba(0,0,0,0.1)",
+                                padding: 1,
+                                borderRadius: 1,
+                                overflow: "auto",
+                                marginBottom: 1,
+                              }}
+                            >
+                              <MKTypography
+                                component="code"
+                                variant="body2"
+                                sx={{
+                                  fontFamily: "monospace",
+                                  color: "inherit",
+                                }}
+                              >
+                                {children}
+                              </MKTypography>
+                            </MKBox>
+                          );
+                        },
+                        h1: ({ children }) => (
+                          <MKTypography
+                            variant="h5"
+                            component="h1"
+                            sx={{ color: "inherit", marginBottom: 1 }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        h2: ({ children }) => (
+                          <MKTypography
+                            variant="h6"
+                            component="h2"
+                            sx={{ color: "inherit", marginBottom: 1 }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                        h3: ({ children }) => (
+                          <MKTypography
+                            variant="body1"
+                            component="h3"
+                            fontWeight="bold"
+                            sx={{ color: "inherit", marginBottom: 1 }}
+                          >
+                            {children}
+                          </MKTypography>
+                        ),
+                      }}
+                    >
+                      {message.content}
+                    </ReactMarkdown>
+                  ) : (
+                    <MKTypography
+                      variant="body2"
+                      sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+                    >
+                      {message.content}
+                    </MKTypography>
+                  )}
                   {message.files && message.files.length > 0 && (
                     <MKBox mt={1} display="flex" flexDirection="column" gap={0.5}>
                       {message.files.map((file, fileIndex) => (

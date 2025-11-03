@@ -6,6 +6,7 @@
 */
 
 import { apiClient } from "core/api";
+import { STORAGE_KEYS } from "core/config";
 
 export const authAPI = {
   /**
@@ -119,7 +120,7 @@ export const authAPI = {
     // TODO: Replace with actual API call when backend is ready
     // return apiClient.get("/auth/me");
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
     if (token) {
       return Promise.resolve({
         data: {
