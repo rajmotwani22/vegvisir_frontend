@@ -29,6 +29,7 @@ export const ROUTES = {
   DATA_TABLES: "/data-tables",
   NOTIFICATIONS: "/notifications",
   CHATBOT: "/chatbot",
+  CHATBOT_FULLSCREEN: "/chatbot-fullscreen",
   SETTINGS: "/settings",
 };
 

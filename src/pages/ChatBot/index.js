@@ -13,6 +13,7 @@ import "katex/dist/katex.min.css";
 
 // @mui material components
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -25,6 +26,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import CloseIcon from "@mui/icons-material/Close";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
 import Icon from "@mui/material/Icon";
 
 // Material Kit 2 PRO React components
@@ -40,6 +43,12 @@ import { useSnackbar } from "shared/hooks";
 // Features
 import { useChatBot } from "features/chatbot";
 
+// React Router
+import { useNavigate, useLocation } from "react-router-dom";
+
+// Core config
+import { ROUTES } from "core/config";
+
 function ChatBot() {
   const [inputMessage, setInputMessage] = useState("");
   const [attachedFiles, setAttachedFiles] = useState([]);
@@ -47,8 +56,20 @@ function ChatBot() {
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isFullscreen = location.pathname === ROUTES.CHATBOT_FULLSCREEN;
+
   const { messages, sendMessage, loading, clearMessages } = useChatBot();
   const { snackbar, showSnackbar, closeSnackbar } = useSnackbar();
+
+  const handleFullscreenToggle = () => {
+    if (isFullscreen) {
+      navigate(ROUTES.CHATBOT);
+    } else {
+      navigate(ROUTES.CHATBOT_FULLSCREEN);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -113,21 +134,36 @@ function ChatBot() {
     }
   };
 
+  const ContainerComponent = isFullscreen ? Box : Container;
+  const containerProps = isFullscreen
+    ? {
+        component: "div",
+        sx: {
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          margin: 0,
+          padding: 0,
+        },
+      }
+    : {
+        sx: {
+          height: "calc(100vh - 200px)",
+          display: "flex",
+          flexDirection: "column",
+          py: 2,
+          px: { xs: 2, sm: 3 },
+        },
+      };
+
   return (
-    <Container
-      sx={{
-        height: "calc(100vh - 200px)",
-        display: "flex",
-        flexDirection: "column",
-        py: 2,
-        px: { xs: 2, sm: 3 },
-      }}
-    >
+    <ContainerComponent {...containerProps}>
       {/* Header */}
       <MKBox
-        mb={2}
+        mb={isFullscreen ? 0 : 2}
         p={2}
-        borderRadius={2}
+        borderRadius={isFullscreen ? 0 : 2}
         sx={{
           background: ({ palette: { info } }) =>
             `linear-gradient(135deg, ${info.main} 0%, ${info.dark || info.main} 100%)`,
@@ -135,25 +171,52 @@ function ChatBot() {
           boxShadow: ({ boxShadows: { md } }) => md,
         }}
       >
-        <MKBox display="flex" alignItems="center" gap={2}>
-          <MKAvatar
-            sx={{
-              width: 48,
-              height: 48,
-              bgcolor: "rgba(255,255,255,0.2)",
-              boxShadow: ({ boxShadows: { sm } }) => sm,
-            }}
-          >
-            <SmartToyIcon sx={{ fontSize: 28 }} />
-          </MKAvatar>
-          <MKBox>
-            <MKTypography variant="h5" fontWeight="bold" color="white">
-              AI Chat Assistant
-            </MKTypography>
-            <MKTypography variant="body2" color="white" sx={{ opacity: 0.9, mt: 0.25 }}>
-              Ask me anything! I&apos;m here to help.
-            </MKTypography>
+        <MKBox display="flex" alignItems="center" justifyContent="space-between" gap={2}>
+          <MKBox display="flex" alignItems="center" gap={2}>
+            <MKAvatar
+              sx={{
+                width: 48,
+                height: 48,
+                bgcolor: "rgba(255,255,255,0.2)",
+                boxShadow: ({ boxShadows: { sm } }) => sm,
+              }}
+            >
+              <SmartToyIcon sx={{ fontSize: 28 }} />
+            </MKAvatar>
+            <MKBox>
+              <MKTypography variant="h5" fontWeight="bold" color="white">
+                AI Chat Assistant
+              </MKTypography>
+              <MKTypography variant="body2" color="white" sx={{ opacity: 0.9, mt: 0.25 }}>
+                Ask me anything! I&apos;m here to help.
+              </MKTypography>
+            </MKBox>
           </MKBox>
+          <IconButton
+            onClick={handleFullscreenToggle}
+            sx={{
+              color: "white !important",
+              bgcolor: "rgba(255,255,255,0.2)",
+              border: "1px solid rgba(255,255,255,0.3)",
+              boxShadow: ({ boxShadows: { sm } }) => sm,
+              "&:hover": {
+                bgcolor: "rgba(255,255,255,0.3)",
+                border: "1px solid rgba(255,255,255,0.5)",
+                transform: "scale(1.05)",
+              },
+              transition: "all 0.2s ease",
+              "& .MuiSvgIcon-root": {
+                color: "white !important",
+              },
+            }}
+            title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          >
+            {isFullscreen ? (
+              <FullscreenExitIcon sx={{ color: "white !important" }} />
+            ) : (
+              <FullscreenIcon sx={{ color: "white !important" }} />
+            )}
+          </IconButton>
         </MKBox>
       </MKBox>
 
@@ -164,8 +227,10 @@ function ChatBot() {
           flexDirection: "column",
           minHeight: 0,
           boxShadow: ({ boxShadows: { lg } }) => lg,
-          borderRadius: 3,
+          borderRadius: isFullscreen ? 0 : 3,
           overflow: "hidden",
+          margin: isFullscreen ? 0 : undefined,
+          width: isFullscreen ? "100%" : "auto",
         }}
       >
         {/* Messages Area */}
@@ -814,7 +879,7 @@ function ChatBot() {
         close={closeSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
-    </Container>
+    </ContainerComponent>
   );
 }
 

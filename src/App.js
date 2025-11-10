@@ -29,9 +29,13 @@ import theme from "assets/theme";
 import { AuthProvider } from "core/context";
 import { ROUTES } from "core/config";
 
+// Features
+import { ChatBotProvider } from "features/chatbot/context";
+
 // Layouts
 import DashboardLayout from "layouts/dashboard/DashboardLayout";
 import IllustrationLayout from "layouts/authentication/IllustrationLayout";
+import FullScreenLayout from "layouts/fullscreen/FullScreenLayout";
 
 // Pages (without layouts)
 import HomePage from "pages/Home";
@@ -64,65 +68,77 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <Routes>
-          {/* Authentication routes with IllustrationLayout */}
-          <Route
-            path={ROUTES.LOGIN}
-            element={
-              <IllustrationLayout
-                title="Sign In"
-                description="Enter your email and password to sign in"
-                illustration={signinImage}
-              >
-                <LoginPage />
-              </IllustrationLayout>
-            }
-          />
-          <Route
-            path={ROUTES.REGISTER}
-            element={
-              <IllustrationLayout
-                title="Sign Up"
-                description="Enter your details to create your account"
-                illustration={signupImage}
-              >
-                <RegisterPage />
-              </IllustrationLayout>
-            }
-          />
-          <Route
-            path={ROUTES.RESET_PASSWORD}
-            element={
-              <IllustrationLayout
-                title="Reset Password"
-                description="You will receive an e-mail in maximum 60 seconds"
-                illustration={resetImage}
-              >
-                <ResetPasswordPage />
-              </IllustrationLayout>
-            }
-          />
+        <ChatBotProvider>
+          <Routes>
+            {/* Authentication routes with IllustrationLayout */}
+            <Route
+              path={ROUTES.LOGIN}
+              element={
+                <IllustrationLayout
+                  title="Sign In"
+                  description="Enter your email and password to sign in"
+                  illustration={signinImage}
+                >
+                  <LoginPage />
+                </IllustrationLayout>
+              }
+            />
+            <Route
+              path={ROUTES.REGISTER}
+              element={
+                <IllustrationLayout
+                  title="Sign Up"
+                  description="Enter your details to create your account"
+                  illustration={signupImage}
+                >
+                  <RegisterPage />
+                </IllustrationLayout>
+              }
+            />
+            <Route
+              path={ROUTES.RESET_PASSWORD}
+              element={
+                <IllustrationLayout
+                  title="Reset Password"
+                  description="You will receive an e-mail in maximum 60 seconds"
+                  illustration={resetImage}
+                >
+                  <ResetPasswordPage />
+                </IllustrationLayout>
+              }
+            />
 
-          {/* Dashboard routes with DashboardLayout */}
-          <Route
-            path="/*"
-            element={
-              <DashboardLayout>
-                <Routes>
-                  <Route path={ROUTES.HOME} element={<HomePage />} />
-                  <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-                  <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
-                  <Route path={ROUTES.USERS} element={<UsersPage />} />
-                  <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
-                  <Route path={ROUTES.DATA_TABLES} element={<DataTablesPage />} />
-                  <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
-                  <Route path={ROUTES.CHATBOT} element={<ChatBotPage />} />
-                  <Route path="/" element={<Navigate to={ROUTES.HOME} />} />
-                </Routes>
-              </DashboardLayout>
-            }
-          />
-        </Routes>
+            {/* FullScreen ChatBot route */}
+            <Route
+              path={ROUTES.CHATBOT_FULLSCREEN}
+              element={
+                <FullScreenLayout>
+                  <ChatBotPage />
+                </FullScreenLayout>
+              }
+            />
+
+            {/* Dashboard routes with DashboardLayout */}
+            <Route
+              path="/*"
+              element={
+                <DashboardLayout>
+                  <Routes>
+                    <Route path={ROUTES.HOME} element={<HomePage />} />
+                    <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+                    <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
+                    <Route path={ROUTES.USERS} element={<UsersPage />} />
+                    <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+                    <Route path={ROUTES.DATA_TABLES} element={<DataTablesPage />} />
+                    <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
+                    <Route path={ROUTES.CHATBOT} element={<ChatBotPage />} />
+                    <Route path="/" element={<Navigate to={ROUTES.HOME} />} />
+                  </Routes>
+                </DashboardLayout>
+              }
+            />
+          </Routes>
+        </ChatBotProvider>
       </AuthProvider>
     </ThemeProvider>
   );
