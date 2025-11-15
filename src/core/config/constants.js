@@ -32,6 +32,7 @@ export const ROUTES = {
   CHATBOT_FULLSCREEN: "/chatbot-fullscreen",
   SETTINGS: "/settings",
   BUDGETS: "/budgets",
+  CARDS: "/cards",
 };
 
 export const PAGINATION = {

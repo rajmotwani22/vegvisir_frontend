@@ -66,4 +66,9 @@ export const dashboardRoutes = [
     icon: <Icon>account_balance_wallet</Icon>,
     route: ROUTES.BUDGETS,
   },
+  {
+    name: "Cards",
+    icon: <Icon>credit_card</Icon>,
+    route: ROUTES.CARDS,
+  },
 ];
