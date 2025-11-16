@@ -69,28 +69,29 @@ function Sidebar({ open, onClose }) {
       anchor="left"
       open={open}
       sx={{
-        width: open ? drawerWidth : 0,
+        width: { xs: open ? drawerWidth : 0, md: open ? drawerWidth : 0 },
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: ({ palette: { white } }) => white.main,
+          backgroundColor: "#000000",
           boxShadow: ({ boxShadows: { lg } }) => lg,
-          borderRight: "1px solid",
-          borderColor: ({ palette: { grey } }) => grey[200],
+          borderRight: "1px solid #CC0000",
           borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
           zIndex: 1250,
+          [({ breakpoints }) => breakpoints.down("md")]: {
+            position: "fixed",
+          },
         },
       }}
     >
       <MKBox
         sx={{
-          background: ({ palette: { info } }) =>
-            `linear-gradient(135deg, ${info.main} 0%, ${info.dark} 100%)`,
+          background: "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          px: 3,
+          px: { xs: 2, md: 3 },
           py: 2,
           minHeight: 72,
           color: "white",
@@ -147,12 +148,12 @@ function Sidebar({ open, onClose }) {
                   minHeight: 48,
                   transition: "all 200ms ease-out",
                   "&.Mui-selected": {
-                    backgroundColor: ({ palette: { info } }) => info.main,
+                    backgroundColor: "#CC0000",
                     color: "white !important",
                     boxShadow: ({ boxShadows: { sm } }) => sm,
                     transform: "translateX(4px)",
                     "&:hover": {
-                      backgroundColor: ({ palette: { info } }) => info.dark,
+                      backgroundColor: "#8b0000",
                       transform: "translateX(4px)",
                       color: "white !important",
                     },
@@ -168,15 +169,21 @@ function Sidebar({ open, onClose }) {
                     },
                   },
                   "&:hover": {
-                    backgroundColor: ({ palette: { grey } }) => grey[100],
+                    backgroundColor: "#1a1a1a",
                     borderRadius: 2,
                     transform: "translateX(2px)",
+                    "& .MuiListItemIcon-root": {
+                      color: "#CC0000 !important",
+                    },
+                    "& .MuiListItemText-primary": {
+                      color: "#ffffff !important",
+                    },
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: location.pathname === item.route ? "white !important" : "text.secondary",
+                    color: location.pathname === item.route ? "white !important" : "#ffffff",
                     minWidth: 44,
                     justifyContent: "center",
                   }}
@@ -186,11 +193,11 @@ function Sidebar({ open, onClose }) {
                 <ListItemText
                   primary={item.text}
                   sx={{
-                    color: location.pathname === item.route ? "white !important" : "text.primary",
+                    color: location.pathname === item.route ? "white !important" : "#ffffff",
                     fontWeight: location.pathname === item.route ? 600 : 400,
                     "& .MuiTypography-root": {
-                      fontSize: "0.875rem",
-                      color: location.pathname === item.route ? "white !important" : "inherit",
+                      fontSize: { xs: "0.8rem", md: "0.875rem" },
+                      color: location.pathname === item.route ? "white !important" : "#ffffff",
                     },
                   }}
                 />

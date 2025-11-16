@@ -167,269 +167,42 @@ function Home() {
   };
 
   return (
-    <Container maxWidth={false} sx={{ px: 0 }}>
+    <Container
+      maxWidth={false}
+      sx={{
+        px: { xs: 1, sm: 2, md: 3 },
+        backgroundColor: "#1a1a1a",
+        minHeight: "100vh",
+      }}
+    >
       {/* Wallet Card Section */}
-      <MKBox mb={6} sx={{ px: 3 }}>
+      <MKBox mb={{ xs: 4, md: 6 }} sx={{ px: { xs: 0, sm: 1, md: 3 } }}>
         <RutgersWalletCardFinal
           userName={user?.full_name || user?.email || "User"}
           balance={formatCurrency(balance)}
           expiryDate={null} // Will be calculated as 2 years from now
+          onLoadMoney={handleOpenDialog}
+          onRefresh={refetch}
+          onSendMoney={() => {
+            // TODO: Implement send money functionality
+            showSnackbar(
+              "info",
+              "info",
+              "Coming Soon",
+              "Send money feature will be available soon!"
+            );
+          }}
+          isLoading={walletLoading}
+          onAddClubCard={() => {
+            // TODO: Implement add club card functionality
+            showSnackbar(
+              "info",
+              "info",
+              "Coming Soon",
+              "Club card feature will be available soon!"
+            );
+          }}
         />
-      </MKBox>
-
-      {/* Quick Stats */}
-      <Grid container spacing={3} mb={6} sx={{ px: 3 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              p: 3,
-              textAlign: "center",
-              height: "100%",
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "white",
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <TrendingUpIcon sx={{ fontSize: 40, mb: 1 }} />
-            <MKTypography variant="h4" fontWeight="bold" mb={1}>
-              1,234
-            </MKTypography>
-            <MKTypography variant="body2" sx={{ opacity: 0.9 }}>
-              Total Users
-            </MKTypography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              p: 3,
-              textAlign: "center",
-              height: "100%",
-              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-              color: "white",
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <AnalyticsIcon sx={{ fontSize: 40, mb: 1 }} />
-            <MKTypography variant="h4" fontWeight="bold" mb={1}>
-              98.5%
-            </MKTypography>
-            <MKTypography variant="body2" sx={{ opacity: 0.9 }}>
-              Uptime
-            </MKTypography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              p: 3,
-              textAlign: "center",
-              height: "100%",
-              background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-              color: "white",
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <AssessmentIcon sx={{ fontSize: 40, mb: 1 }} />
-            <MKTypography variant="h4" fontWeight="bold" mb={1}>
-              567
-            </MKTypography>
-            <MKTypography variant="body2" sx={{ opacity: 0.9 }}>
-              Reports
-            </MKTypography>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card
-            sx={{
-              p: 3,
-              textAlign: "center",
-              height: "100%",
-              background: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
-              color: "white",
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <PeopleIcon sx={{ fontSize: 40, mb: 1 }} />
-            <MKTypography variant="h4" fontWeight="bold" mb={1}>
-              89
-            </MKTypography>
-            <MKTypography variant="body2" sx={{ opacity: 0.9 }}>
-              Active Teams
-            </MKTypography>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Flex Dollars Wallet Section */}
-      <MKBox mb={6} sx={{ px: 3 }}>
-        <MKBox display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-          <MKTypography variant="h5" fontWeight="bold">
-            Flex Dollars Wallet
-          </MKTypography>
-          <MKBox display="flex" gap={2}>
-            <MKButton
-              variant="outlined"
-              color="info"
-              size="medium"
-              onClick={refetch}
-              startIcon={<RefreshIcon />}
-              disabled={walletLoading}
-            >
-              Refresh
-            </MKButton>
-            <MKButton
-              variant="gradient"
-              color="info"
-              size="medium"
-              onClick={handleOpenDialog}
-              startIcon={<AddIcon />}
-              disabled={cards.length === 0}
-            >
-              Load Money
-            </MKButton>
-          </MKBox>
-        </MKBox>
-
-        {walletError && (
-          <MKBox mb={2}>
-            <MKTypography variant="body2" color="error">
-              Error: {walletError}
-            </MKTypography>
-          </MKBox>
-        )}
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8} lg={6}>
-            <Card
-              sx={{
-                p: 4,
-                borderRadius: 3,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                border: "1px solid rgba(0,0,0,0.05)",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                color: "white",
-              }}
-            >
-              <MKBox display="flex" alignItems="center" mb={3}>
-                <AccountBalanceWalletIcon sx={{ fontSize: 40, mr: 2 }} />
-                <MKBox>
-                  <MKTypography variant="h6" fontWeight="medium" opacity={0.9}>
-                    Flex Dollars Balance
-                  </MKTypography>
-                  {walletLoading ? (
-                    <CircularProgress size={24} sx={{ color: "white", mt: 1 }} />
-                  ) : (
-                    <MKTypography variant="h3" fontWeight="bold" mt={1}>
-                      {formatCurrency(balance)}
-                    </MKTypography>
-                  )}
-                </MKBox>
-              </MKBox>
-              {wallet && (
-                <MKBox>
-                  <MKTypography variant="caption" opacity={0.8}>
-                    Last updated: {new Date(wallet.updated_at).toLocaleString()}
-                  </MKTypography>
-                </MKBox>
-              )}
-            </Card>
-          </Grid>
-
-          <Grid item xs={12} md={4} lg={6}>
-            <Card
-              sx={{
-                p: 3,
-                height: "100%",
-                borderRadius: 3,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                border: "1px solid rgba(0,0,0,0.05)",
-              }}
-            >
-              <MKTypography variant="h6" fontWeight="bold" mb={2}>
-                About Flex Dollars
-              </MKTypography>
-              <MKTypography variant="body2" color="text.secondary" mb={2}>
-                Flex Dollars is your campus currency that can be used for various services and
-                purchases.
-              </MKTypography>
-              <MKBox component="ul" sx={{ pl: 2, m: 0 }}>
-                <MKTypography component="li" variant="body2" color="text.secondary" mb={1}>
-                  Load money from your registered cards
-                </MKTypography>
-                <MKTypography component="li" variant="body2" color="text.secondary" mb={1}>
-                  Maximum $10,000 per transaction
-                </MKTypography>
-                <MKTypography component="li" variant="body2" color="text.secondary">
-                  Use Flex Dollars for campus services
-                </MKTypography>
-              </MKBox>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {cards.length === 0 && !cardsLoading && (
-          <MKBox mt={3}>
-            <Card
-              sx={{
-                p: 3,
-                borderRadius: 3,
-                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                border: "1px solid rgba(0,0,0,0.05)",
-                backgroundColor: "rgba(255, 193, 7, 0.1)",
-              }}
-            >
-              <MKBox display="flex" alignItems="center" gap={2}>
-                <CreditCardIcon color="warning" />
-                <MKBox>
-                  <MKTypography variant="body1" fontWeight="bold" mb={0.5}>
-                    No Cards Available
-                  </MKTypography>
-                  <MKTypography variant="body2" color="text.secondary">
-                    You need to add a payment card before you can load money into your Flex Dollars
-                    wallet.
-                  </MKTypography>
-                </MKBox>
-              </MKBox>
-            </Card>
-          </MKBox>
-        )}
       </MKBox>
 
       {/* Load Money Dialog */}
@@ -511,6 +284,119 @@ function Home() {
         </DialogActions>
       </Dialog>
 
+      {/* Transactions Section */}
+      <MKBox mb={6} sx={{ px: { xs: 0, sm: 1, md: 3 } }}>
+        <MKTypography
+          variant="h5"
+          fontWeight="bold"
+          mb={3}
+          sx={{ color: "#ffffff", fontSize: { xs: "1.5rem", md: "2rem" } }}
+        >
+          Recent Transactions
+        </MKTypography>
+        <Card
+          sx={{
+            borderRadius: 3,
+            boxShadow: "0 4px 20px rgba(204, 0, 0, 0.2)",
+            border: "1px solid rgba(204, 0, 0, 0.3)",
+            overflow: "hidden",
+            backgroundColor: "#1a1a1a",
+            color: "#ffffff",
+          }}
+        >
+          {/* Dummy Transactions - Amex Style */}
+          {[
+            {
+              id: 1,
+              date: "Dec 15, 2024",
+              merchant: "Campus Dining Hall",
+              amount: -12.5,
+              type: "purchase",
+            },
+            {
+              id: 2,
+              date: "Dec 14, 2024",
+              merchant: "Bookstore",
+              amount: -45.99,
+              type: "purchase",
+            },
+            {
+              id: 3,
+              date: "Dec 13, 2024",
+              merchant: "Flex Dollars Load",
+              amount: 100.0,
+              type: "load",
+            },
+            {
+              id: 4,
+              date: "Dec 12, 2024",
+              merchant: "Campus Coffee Shop",
+              amount: -5.75,
+              type: "purchase",
+            },
+            {
+              id: 5,
+              date: "Dec 11, 2024",
+              merchant: "Laundry Services",
+              amount: -8.0,
+              type: "purchase",
+            },
+            {
+              id: 6,
+              date: "Dec 10, 2024",
+              merchant: "Flex Dollars Load",
+              amount: 50.0,
+              type: "load",
+            },
+          ].map((transaction, index) => (
+            <MKBox
+              key={transaction.id}
+              sx={{
+                p: { xs: 2, md: 3 },
+                borderBottom: index < 5 ? "1px solid rgba(204, 0, 0, 0.2)" : "none",
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                justifyContent: "space-between",
+                alignItems: { xs: "flex-start", sm: "center" },
+                gap: { xs: 1, sm: 0 },
+                transition: "background 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "rgba(204, 0, 0, 0.1)",
+                },
+              }}
+            >
+              <MKBox sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}>
+                <MKTypography
+                  variant="body1"
+                  fontWeight="bold"
+                  mb={0.5}
+                  sx={{ color: "#ffffff", fontSize: { xs: "0.9rem", md: "1rem" } }}
+                >
+                  {transaction.merchant}
+                </MKTypography>
+                <MKTypography
+                  variant="body2"
+                  sx={{ color: "#999999", fontSize: { xs: "0.8rem", md: "0.875rem" } }}
+                >
+                  {transaction.date}
+                </MKTypography>
+              </MKBox>
+              <MKTypography
+                variant="h6"
+                fontWeight="bold"
+                sx={{
+                  color: transaction.amount > 0 ? "#4CAF50" : "#ffffff",
+                  fontSize: { xs: "1rem", md: "1.25rem" },
+                }}
+              >
+                {transaction.amount > 0 ? "+" : ""}
+                {formatCurrency(Math.abs(transaction.amount))}
+              </MKTypography>
+            </MKBox>
+          ))}
+        </Card>
+      </MKBox>
+
       {/* Snackbar */}
       <MKSnackbar
         color={snackbar.color}
@@ -522,166 +408,6 @@ function Home() {
         close={closeSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       />
-
-      {/* Feature Cards */}
-      <Grid container spacing={4} sx={{ px: 3 }}>
-        <Grid item xs={12} lg={4}>
-          <Card
-            sx={{
-              p: 4,
-              height: "100%",
-              backgroundColor: ({ palette: { white } }) => white.main,
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <MKBox textAlign="center" mb={3}>
-              <MKBox
-                sx={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mx: "auto",
-                  mb: 2,
-                }}
-              >
-                <DashboardIcon sx={{ fontSize: 32, color: "white" }} />
-              </MKBox>
-              <MKTypography variant="h5" fontWeight="bold" mb={2}>
-                Dashboard Overview
-              </MKTypography>
-              <MKTypography variant="body2" color="text" mb={3} sx={{ lineHeight: 1.6 }}>
-                Get comprehensive insights into your data with our intuitive dashboard interface.
-              </MKTypography>
-            </MKBox>
-            <MKButton
-              variant="gradient"
-              color="info"
-              size="large"
-              fullWidth
-              sx={{ borderRadius: 2 }}
-            >
-              Get Started
-            </MKButton>
-          </Card>
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <Card
-            sx={{
-              p: 4,
-              height: "100%",
-              backgroundColor: ({ palette: { white } }) => white.main,
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <MKBox textAlign="center" mb={3}>
-              <MKBox
-                sx={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mx: "auto",
-                  mb: 2,
-                }}
-              >
-                <AnalyticsIcon sx={{ fontSize: 32, color: "white" }} />
-              </MKBox>
-              <MKTypography variant="h5" fontWeight="bold" mb={2}>
-                Analytics
-              </MKTypography>
-              <MKTypography variant="body2" color="text" mb={3} sx={{ lineHeight: 1.6 }}>
-                Track performance metrics and generate detailed reports for better decision making.
-              </MKTypography>
-            </MKBox>
-            <MKButton
-              variant="gradient"
-              color="success"
-              size="large"
-              fullWidth
-              sx={{ borderRadius: 2 }}
-            >
-              View Analytics
-            </MKButton>
-          </Card>
-        </Grid>
-        <Grid item xs={12} lg={4}>
-          <Card
-            sx={{
-              p: 4,
-              height: "100%",
-              backgroundColor: ({ palette: { white } }) => white.main,
-              borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
-              boxShadow: ({ boxShadows: { md } }) => md,
-              border: ({ borders: { borderWidth }, palette: { black }, functions: { rgba } }) =>
-                `${borderWidth[0]} solid ${rgba(black.main, 0.125)}`,
-              overflow: "visible",
-              transition: "all 200ms ease-out",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: ({ boxShadows: { lg } }) => lg,
-              },
-            }}
-          >
-            <MKBox textAlign="center" mb={3}>
-              <MKBox
-                sx={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  mx: "auto",
-                  mb: 2,
-                }}
-              >
-                <SettingsIcon sx={{ fontSize: 32, color: "white" }} />
-              </MKBox>
-              <MKTypography variant="h5" fontWeight="bold" mb={2}>
-                Settings
-              </MKTypography>
-              <MKTypography variant="body2" color="text" mb={3} sx={{ lineHeight: 1.6 }}>
-                Customize your experience with our flexible and intuitive settings panel.
-              </MKTypography>
-            </MKBox>
-            <MKButton
-              variant="gradient"
-              color="warning"
-              size="large"
-              fullWidth
-              sx={{ borderRadius: 2 }}
-            >
-              Configure
-            </MKButton>
-          </Card>
-        </Grid>
-      </Grid>
     </Container>
   );
 }

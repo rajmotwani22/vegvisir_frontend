@@ -21,12 +21,12 @@ Coded by www.creative-tim.com
 
 export default {
   background: {
-    default: "#f0f2f5",
+    default: "#1a1a1a",
   },
 
   text: {
-    main: "#7b809a",
-    focus: "#7b809a",
+    main: "#ffffff",
+    focus: "#ffffff",
   },
 
   transparent: {
@@ -39,164 +39,164 @@ export default {
   },
 
   black: {
-    light: "#000000",
+    light: "#1a1a1a",
     main: "#000000",
     focus: "#000000",
   },
 
   primary: {
-    main: "#e91e63",
-    focus: "#e91e63",
+    main: "#CC0000",
+    focus: "#8b0000",
   },
 
   secondary: {
-    main: "#7b809a",
-    focus: "#8f93a9",
+    main: "#ffffff",
+    focus: "#f5f5f5",
   },
 
   info: {
-    main: "#1A73E8",
-    focus: "#1662C4",
+    main: "#CC0000",
+    focus: "#8b0000",
   },
 
   success: {
-    main: "#4CAF50",
-    focus: "#67bb6a",
+    main: "#CC0000",
+    focus: "#8b0000",
   },
 
   warning: {
-    main: "#fb8c00",
-    focus: "#fc9d26",
+    main: "#CC0000",
+    focus: "#8b0000",
   },
 
   error: {
-    main: "#F44335",
-    focus: "#f65f53",
+    main: "#CC0000",
+    focus: "#8b0000",
   },
 
   light: {
-    main: "#f0f2f5",
-    focus: "#f0f2f5",
+    main: "#ffffff",
+    focus: "#ffffff",
   },
 
   dark: {
-    main: "#344767",
-    focus: "#2c3c58",
+    main: "#000000",
+    focus: "#000000",
   },
 
   grey: {
-    100: "#f8f9fa",
-    200: "#f0f2f5",
-    300: "#dee2e6",
-    400: "#ced4da",
-    500: "#adb5bd",
-    600: "#6c757d",
-    700: "#495057",
-    800: "#343a40",
-    900: "#212529",
+    100: "#1a1a1a",
+    200: "#2d2d2d",
+    300: "#404040",
+    400: "#525252",
+    500: "#666666",
+    600: "#808080",
+    700: "#999999",
+    800: "#b3b3b3",
+    900: "#ffffff",
   },
 
   gradients: {
     primary: {
-      main: "#EC407A",
-      state: "#D81B60",
+      main: "#CC0000",
+      state: "#8b0000",
     },
 
     secondary: {
-      main: "#747b8a",
-      state: "#495361",
+      main: "#ffffff",
+      state: "#f5f5f5",
     },
 
     info: {
-      main: "#49a3f1",
-      state: "#1A73E8",
+      main: "#CC0000",
+      state: "#8b0000",
     },
 
     success: {
-      main: "#66BB6A",
-      state: "#43A047",
+      main: "#CC0000",
+      state: "#8b0000",
     },
 
     warning: {
-      main: "#FFA726",
-      state: "#FB8C00",
+      main: "#CC0000",
+      state: "#8b0000",
     },
 
     error: {
-      main: "#EF5350",
-      state: "#E53935",
+      main: "#CC0000",
+      state: "#8b0000",
     },
 
     light: {
-      main: "#EBEFF4",
-      state: "#CED4DA",
+      main: "#ffffff",
+      state: "#f5f5f5",
     },
 
     dark: {
-      main: "#42424a",
-      state: "#191919",
+      main: "#000000",
+      state: "#1a1a1a",
     },
   },
 
   socialMediaColors: {
     facebook: {
-      main: "#3b5998",
-      dark: "#344e86",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     twitter: {
-      main: "#55acee",
-      dark: "#3ea1ec",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     instagram: {
-      main: "#125688",
-      dark: "#0e456d",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     linkedin: {
-      main: "#0077b5",
-      dark: "#00669c",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     pinterest: {
-      main: "#cc2127",
-      dark: "#b21d22",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     youtube: {
-      main: "#e52d27",
-      dark: "#d41f1a",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     vimeo: {
-      main: "#1ab7ea",
-      dark: "#13a3d2",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     slack: {
-      main: "#3aaf85",
-      dark: "#329874",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     dribbble: {
-      main: "#ea4c89",
-      dark: "#e73177",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     github: {
-      main: "#24292e",
-      dark: "#171a1d",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     reddit: {
-      main: "#ff4500",
-      dark: "#e03d00",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
 
     tumblr: {
-      main: "#35465c",
-      dark: "#2a3749",
+      main: "#ffffff",
+      dark: "#f5f5f5",
     },
   },
 

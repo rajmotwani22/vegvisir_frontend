@@ -1,10 +1,20 @@
 import React, { useState, useRef } from "react";
 import PropTypes from "prop-types";
 
-const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDate = null }) => {
+const RutgersWalletCardFinal = ({
+  userName = "User",
+  balance = "$0.00",
+  expiryDate = null,
+  onLoadMoney,
+  onRefresh,
+  onSendMoney,
+  isLoading = false,
+  onAddClubCard,
+}) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [cardBackground, setCardBackground] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [showInfoDialog, setShowInfoDialog] = useState(false);
   const backgroundInputRef = useRef(null);
 
   // Calculate expiry date (2 years from now) if not provided
@@ -43,7 +53,7 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
   return (
     <div
       style={{
-        padding: "40px 20px",
+        padding: "20px",
         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         position: "relative",
         overflow: "hidden",
@@ -81,98 +91,69 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
             0%, 100% { opacity: 0.4; }
             50% { opacity: 0.7; }
           }
+
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          @keyframes slide-up {
+            0% { transform: translateY(10px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+
+          @keyframes pulse-text {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+          }
         `}
       </style>
 
-      {/* Header */}
-      <div
-        style={{
-          textAlign: "center",
-          marginBottom: "40px",
-          color: "#1f2937",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <h1
+      {/* Add Club Card Button - Small floating button */}
+      {onAddClubCard && (
+        <div
           style={{
-            fontSize: "2.5rem",
-            marginBottom: "10px",
-            fontWeight: "700",
-            background: "linear-gradient(135deg, #cc0000 0%, #8b0000 50%, #cc0000 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
+            position: "absolute",
+            top: "20px",
+            right: "20px",
+            zIndex: 10,
           }}
         >
-          Rutgers Virtual Wallet
-        </h1>
-        <p
-          style={{
-            fontSize: "1.1rem",
-            color: "#6b7280",
-            fontWeight: "300",
-          }}
-        >
-          Clean & Sleek Design • Click &quot;Add Background&quot; for personalization
-        </p>
-      </div>
-
-      {/* Background Upload Button */}
-      <div
-        style={{
-          maxWidth: "480px",
-          margin: "0 auto 20px",
-          position: "relative",
-          zIndex: 2,
-        }}
-      >
-        <button
-          className="background-upload-area"
-          onClick={triggerBackgroundInput}
-          style={{
-            width: "100%",
-            padding: "12px 24px",
-            background: "rgba(204, 0, 0, 0.15)",
-            backdropFilter: "blur(10px)",
-            border: "2px solid rgba(204, 0, 0, 0.3)",
-            borderRadius: "16px",
-            color: "#1f2937",
-            fontSize: "0.95rem",
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "10px",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(204, 0, 0, 0.25)";
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow = "0 8px 20px rgba(204, 0, 0, 0.3)";
-            e.currentTarget.style.color = "#ffffff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "rgba(204, 0, 0, 0.15)";
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow = "none";
-            e.currentTarget.style.color = "#1f2937";
-          }}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
-          </svg>
-          {cardBackground ? "Change Card Background" : "Add Personalized Background"}
-        </button>
-        <input
-          ref={backgroundInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleBackgroundUpload}
-          style={{ display: "none" }}
-        />
-      </div>
+          <button
+            onClick={onAddClubCard}
+            style={{
+              padding: "8px 12px",
+              background: "rgba(204, 0, 0, 0.9)",
+              border: "none",
+              borderRadius: "20px",
+              color: "#ffffff",
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(204, 0, 0, 1)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.3)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(204, 0, 0, 0.9)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.2)";
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Club Card
+          </button>
+        </div>
+      )}
 
       {/* Card Container */}
       <div
@@ -180,7 +161,7 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
           perspective: "1500px",
           width: "100%",
           maxWidth: "480px",
-          margin: "0 auto 40px",
+          margin: "0 auto 20px",
           position: "relative",
           zIndex: 2,
         }}
@@ -383,33 +364,6 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
                     </div>
                   </div>
                 </div>
-
-                {/* Contactless Icon */}
-                <div
-                  style={{
-                    background: cardBackground
-                      ? "rgba(0, 0, 0, 0.5)"
-                      : "linear-gradient(135deg, rgba(204, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.1) 100%)",
-                    backdropFilter: "blur(10px)",
-                    borderRadius: "12px",
-                    padding: "8px",
-                    border: cardBackground
-                      ? "2px solid rgba(255, 255, 255, 0.3)"
-                      : "2px solid rgba(204, 0, 0, 0.3)",
-                    boxShadow: cardBackground
-                      ? "0 0 20px rgba(255, 255, 255, 0.2)"
-                      : "0 0 20px rgba(204, 0, 0, 0.2)",
-                  }}
-                >
-                  <svg
-                    width="28"
-                    height="28"
-                    viewBox="0 0 24 24"
-                    fill={cardBackground ? "#ffffff" : "#CC0000"}
-                  >
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
-                  </svg>
-                </div>
               </div>
 
               {/* Bottom Section - Name and Balance */}
@@ -434,18 +388,6 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
                     flex: "0 0 auto",
                   }}
                 >
-                  <div
-                    style={{
-                      color: cardBackground ? "rgba(255, 255, 255, 0.7)" : "#6b7280",
-                      fontSize: "0.75rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "1.5px",
-                      marginBottom: "6px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Card Holder
-                  </div>
                   <div
                     style={{
                       color: cardBackground ? "#ffffff" : "#1f2937",
@@ -479,15 +421,54 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
                 >
                   <div
                     style={{
-                      color: cardBackground ? "rgba(255, 255, 255, 0.9)" : "#6b7280",
-                      fontSize: "0.75rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "1.5px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
                       marginBottom: "6px",
-                      fontWeight: 600,
                     }}
                   >
-                    Balance
+                    <div
+                      style={{
+                        color: cardBackground ? "rgba(255, 255, 255, 0.9)" : "#6b7280",
+                        fontSize: "0.75rem",
+                        textTransform: "uppercase",
+                        letterSpacing: "1.5px",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Flex Dollars
+                    </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowInfoDialog(true);
+                      }}
+                      style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        padding: "2px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: cardBackground ? "rgba(255, 255, 255, 0.7)" : "#6b7280",
+                        transition: "all 0.2s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = cardBackground ? "#ffffff" : "#CC0000";
+                        e.currentTarget.style.transform = "scale(1.1)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = cardBackground
+                          ? "rgba(255, 255, 255, 0.7)"
+                          : "#6b7280";
+                        e.currentTarget.style.transform = "scale(1)";
+                      }}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                      </svg>
+                    </button>
                   </div>
                   <div
                     style={{
@@ -695,6 +676,328 @@ const RutgersWalletCardFinal = ({ userName = "User", balance = "$0.00", expiryDa
           </div>
         </div>
       </div>
+
+      {/* Action Buttons Below Card */}
+      <div
+        style={{
+          maxWidth: "480px",
+          margin: "20px auto 0",
+          position: "relative",
+          zIndex: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+        }}
+      >
+        {/* Send Money Button - Main Button */}
+        {onSendMoney && (
+          <button
+            onClick={onSendMoney}
+            disabled={isLoading}
+            style={{
+              width: "100%",
+              padding: "12px 24px",
+              background: "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)",
+              border: "2px solid rgba(204, 0, 0, 0.3)",
+              borderRadius: "16px",
+              color: "#ffffff",
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              cursor: isLoading ? "not-allowed" : "pointer",
+              opacity: isLoading ? 0.6 : 1,
+              transition: "all 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              boxShadow: "0 4px 12px rgba(204, 0, 0, 0.3)",
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #8b0000 0%, #CC0000 100%)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 6px 16px rgba(204, 0, 0, 0.4)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(204, 0, 0, 0.3)";
+              }
+            }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+            </svg>
+            Send Money
+          </button>
+        )}
+
+        {/* Refresh, Load Money, and Background Upload Buttons */}
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+          }}
+        >
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              disabled={isLoading}
+              style={{
+                flex: 1,
+                padding: "12px 24px",
+                background: "rgba(204, 0, 0, 0.1)",
+                border: "2px solid rgba(204, 0, 0, 0.3)",
+                borderRadius: "16px",
+                color: "#CC0000",
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.6 : 1,
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = "rgba(204, 0, 0, 0.2)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(204, 0, 0, 0.2)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = "rgba(204, 0, 0, 0.1)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{
+                  animation: isLoading ? "spin 1s linear infinite" : "none",
+                }}
+              >
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+              </svg>
+              Refresh
+            </button>
+          )}
+          {onLoadMoney && (
+            <button
+              onClick={onLoadMoney}
+              disabled={isLoading}
+              style={{
+                flex: 1,
+                padding: "12px 24px",
+                background: "rgba(204, 0, 0, 0.1)",
+                border: "2px solid rgba(204, 0, 0, 0.3)",
+                borderRadius: "16px",
+                color: "#CC0000",
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.6 : 1,
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+              }}
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = "rgba(204, 0, 0, 0.2)";
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(204, 0, 0, 0.2)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = "rgba(204, 0, 0, 0.1)";
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "none";
+                }
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+              </svg>
+              Load Money
+            </button>
+          )}
+          <button
+            className="background-upload-area"
+            onClick={triggerBackgroundInput}
+            style={{
+              flex: 1,
+              padding: "12px 24px",
+              background: "rgba(204, 0, 0, 0.15)",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(204, 0, 0, 0.3)",
+              borderRadius: "16px",
+              color: "#1f2937",
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(204, 0, 0, 0.25)";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 8px 20px rgba(204, 0, 0, 0.3)";
+              e.currentTarget.style.color = "#ffffff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(204, 0, 0, 0.15)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.color = "#1f2937";
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+            </svg>
+            {cardBackground ? "Change Background" : "Add Background"}
+          </button>
+        </div>
+        <input
+          ref={backgroundInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleBackgroundUpload}
+          style={{ display: "none" }}
+        />
+      </div>
+
+      {/* Flex Dollars Info Dialog */}
+      {showInfoDialog && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: "20px",
+          }}
+          onClick={() => setShowInfoDialog(false)}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: "20px",
+              padding: "32px",
+              maxWidth: "500px",
+              width: "100%",
+              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowInfoDialog(false)}
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "24px",
+                color: "#6b7280",
+                padding: "4px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f3f4f6";
+                e.currentTarget.style.color = "#1f2937";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "none";
+                e.currentTarget.style.color = "#6b7280";
+              }}
+            >
+              ×
+            </button>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: 800,
+                color: "#1f2937",
+                marginBottom: "16px",
+                marginRight: "32px",
+              }}
+            >
+              About Flex Dollars
+            </h2>
+            <div style={{ color: "#6b7280", lineHeight: "1.6", marginBottom: "20px" }}>
+              <p style={{ marginBottom: "12px" }}>
+                Flex Dollars is your campus currency that can be used for various services and
+                purchases.
+              </p>
+              <ul style={{ paddingLeft: "20px", margin: 0 }}>
+                <li style={{ marginBottom: "8px" }}>Load money from your registered cards</li>
+                <li style={{ marginBottom: "8px" }}>Maximum $10,000 per transaction</li>
+                <li>Use Flex Dollars for campus services</li>
+              </ul>
+            </div>
+            <button
+              onClick={() => setShowInfoDialog(false)}
+              style={{
+                width: "100%",
+                padding: "12px 24px",
+                background: "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)",
+                border: "none",
+                borderRadius: "12px",
+                color: "#ffffff",
+                fontSize: "0.95rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #8b0000 0%, #CC0000 100%)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 6px 16px rgba(204, 0, 0, 0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background =
+                  "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -703,6 +1006,11 @@ RutgersWalletCardFinal.propTypes = {
   userName: PropTypes.string,
   balance: PropTypes.string,
   expiryDate: PropTypes.string,
+  onLoadMoney: PropTypes.func,
+  onRefresh: PropTypes.func,
+  onSendMoney: PropTypes.func,
+  isLoading: PropTypes.bool,
+  onAddClubCard: PropTypes.func,
 };
 
 export default RutgersWalletCardFinal;

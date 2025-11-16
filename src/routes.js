@@ -37,34 +37,9 @@ export const dashboardRoutes = [
     route: ROUTES.ANALYTICS,
   },
   {
-    name: "Users",
-    icon: <Icon>people</Icon>,
-    route: ROUTES.USERS,
-  },
-  {
-    name: "Settings",
-    icon: <Icon>settings</Icon>,
-    route: ROUTES.SETTINGS,
-  },
-  {
-    name: "Data Tables",
-    icon: <Icon>table_chart</Icon>,
-    route: ROUTES.DATA_TABLES,
-  },
-  {
-    name: "Notifications",
-    icon: <Icon>notifications</Icon>,
-    route: ROUTES.NOTIFICATIONS,
-  },
-  {
     name: "ChatBot",
     icon: <Icon>smart_toy</Icon>,
     route: ROUTES.CHATBOT,
-  },
-  {
-    name: "Budgets",
-    icon: <Icon>account_balance_wallet</Icon>,
-    route: ROUTES.BUDGETS,
   },
   {
     name: "Cards",
