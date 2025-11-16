@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   TOKEN: "token",
   USER: "user",
   THEME: "theme",
+  THEME_MODE: "themeMode",
   RECENT_SEARCHES: "recentSearches",
 };
 

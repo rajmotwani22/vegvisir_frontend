@@ -74,9 +74,10 @@ function Sidebar({ open, onClose }) {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "#000000",
+          backgroundColor: ({ palette: { background, mode } }) =>
+            mode === "dark" ? background.default : "#ffffff",
           boxShadow: ({ boxShadows: { lg } }) => lg,
-          borderRight: "1px solid #CC0000",
+          borderRight: ({ palette: { primary } }) => `1px solid ${primary.main}`,
           borderRadius: ({ borders: { borderRadius } }) => borderRadius.xl,
           zIndex: 1250,
           [({ breakpoints }) => breakpoints.down("md")]: {
@@ -148,12 +149,12 @@ function Sidebar({ open, onClose }) {
                   minHeight: 48,
                   transition: "all 200ms ease-out",
                   "&.Mui-selected": {
-                    backgroundColor: "#CC0000",
+                    backgroundColor: ({ palette: { primary } }) => primary.main,
                     color: "white !important",
                     boxShadow: ({ boxShadows: { sm } }) => sm,
                     transform: "translateX(4px)",
                     "&:hover": {
-                      backgroundColor: "#8b0000",
+                      backgroundColor: ({ palette: { primary } }) => primary.focus,
                       transform: "translateX(4px)",
                       color: "white !important",
                     },
@@ -169,21 +170,27 @@ function Sidebar({ open, onClose }) {
                     },
                   },
                   "&:hover": {
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: ({ palette: { mode, grey } }) =>
+                      mode === "dark" ? grey[200] : grey[100],
                     borderRadius: 2,
                     transform: "translateX(2px)",
                     "& .MuiListItemIcon-root": {
-                      color: "#CC0000 !important",
+                      color: ({ palette: { primary } }) => `${primary.main} !important`,
                     },
                     "& .MuiListItemText-primary": {
-                      color: "#ffffff !important",
+                      color: ({ palette: { text } }) => `${text.main} !important`,
                     },
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: location.pathname === item.route ? "white !important" : "#ffffff",
+                    color: ({ palette: { mode } }) =>
+                      location.pathname === item.route
+                        ? "white !important"
+                        : mode === "dark"
+                        ? "#ffffff"
+                        : "#344767",
                     minWidth: 44,
                     justifyContent: "center",
                   }}
@@ -193,11 +200,21 @@ function Sidebar({ open, onClose }) {
                 <ListItemText
                   primary={item.text}
                   sx={{
-                    color: location.pathname === item.route ? "white !important" : "#ffffff",
+                    color: ({ palette: { mode } }) =>
+                      location.pathname === item.route
+                        ? "white !important"
+                        : mode === "dark"
+                        ? "#ffffff"
+                        : "#344767",
                     fontWeight: location.pathname === item.route ? 600 : 400,
                     "& .MuiTypography-root": {
                       fontSize: { xs: "0.8rem", md: "0.875rem" },
-                      color: location.pathname === item.route ? "white !important" : "#ffffff",
+                      color: ({ palette: { mode } }) =>
+                        location.pathname === item.route
+                          ? "white !important"
+                          : mode === "dark"
+                          ? "#ffffff"
+                          : "#344767",
                     },
                   }}
                 />

@@ -104,7 +104,7 @@ function DashboardLayout({ children }) {
             position: "relative",
             zIndex: 1,
             minHeight: "100vh",
-            backgroundColor: "#1a1a1a",
+            backgroundColor: ({ palette: { background } }) => background.default,
           }}
         >
           <Container maxWidth={false} sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
@@ -121,7 +121,8 @@ function DashboardLayout({ children }) {
           id="dashboard-footer"
           sx={{
             boxShadow: ({ boxShadows: { sm } }) => sm,
-            backgroundColor: ({ palette: { grey } }) => grey[50],
+            backgroundColor: ({ palette: { mode, background, grey, white } }) =>
+              mode === "dark" ? background.default : grey[50] || white.main,
           }}
         >
           <CenteredFooter />

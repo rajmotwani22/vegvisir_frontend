@@ -171,7 +171,7 @@ function Home() {
       maxWidth={false}
       sx={{
         px: { xs: 1, sm: 2, md: 3 },
-        backgroundColor: "#1a1a1a",
+        backgroundColor: ({ palette: { background } }) => background.default,
         minHeight: "100vh",
       }}
     >
@@ -290,18 +290,26 @@ function Home() {
           variant="h5"
           fontWeight="bold"
           mb={3}
-          sx={{ color: "#ffffff", fontSize: { xs: "1.5rem", md: "2rem" } }}
+          sx={{
+            color: ({ palette: { text } }) => text.main,
+            fontSize: { xs: "1.5rem", md: "2rem" },
+          }}
         >
           Recent Transactions
         </MKTypography>
         <Card
           sx={{
             borderRadius: 3,
-            boxShadow: "0 4px 20px rgba(204, 0, 0, 0.2)",
-            border: "1px solid rgba(204, 0, 0, 0.3)",
+            boxShadow: ({ palette: { primary, mode } }) =>
+              mode === "dark"
+                ? "0 4px 20px rgba(204, 0, 0, 0.2)"
+                : "0 4px 20px rgba(0, 0, 0, 0.08)",
+            border: ({ palette: { primary, mode } }) =>
+              mode === "dark" ? `1px solid rgba(204, 0, 0, 0.3)` : `1px solid rgba(0, 0, 0, 0.1)`,
             overflow: "hidden",
-            backgroundColor: "#1a1a1a",
-            color: "#ffffff",
+            backgroundColor: ({ palette: { mode, grey, white } }) =>
+              mode === "dark" ? grey[200] : white.main,
+            color: ({ palette: { text } }) => text.main,
           }}
         >
           {/* Dummy Transactions - Amex Style */}
@@ -353,7 +361,12 @@ function Home() {
               key={transaction.id}
               sx={{
                 p: { xs: 2, md: 3 },
-                borderBottom: index < 5 ? "1px solid rgba(204, 0, 0, 0.2)" : "none",
+                borderBottom: ({ palette: { mode, primary, grey } }) =>
+                  index < 5
+                    ? mode === "dark"
+                      ? `1px solid rgba(204, 0, 0, 0.2)`
+                      : `1px solid ${grey[200]}`
+                    : "none",
                 display: "flex",
                 flexDirection: { xs: "column", sm: "row" },
                 justifyContent: "space-between",
@@ -361,7 +374,8 @@ function Home() {
                 gap: { xs: 1, sm: 0 },
                 transition: "background 0.2s ease",
                 "&:hover": {
-                  backgroundColor: "rgba(204, 0, 0, 0.1)",
+                  backgroundColor: ({ palette: { mode, primary, grey } }) =>
+                    mode === "dark" ? "rgba(204, 0, 0, 0.1)" : grey[100],
                 },
               }}
             >
@@ -370,13 +384,20 @@ function Home() {
                   variant="body1"
                   fontWeight="bold"
                   mb={0.5}
-                  sx={{ color: "#ffffff", fontSize: { xs: "0.9rem", md: "1rem" } }}
+                  sx={{
+                    color: ({ palette: { text } }) => text.main,
+                    fontSize: { xs: "0.9rem", md: "1rem" },
+                  }}
                 >
                   {transaction.merchant}
                 </MKTypography>
                 <MKTypography
                   variant="body2"
-                  sx={{ color: "#999999", fontSize: { xs: "0.8rem", md: "0.875rem" } }}
+                  sx={{
+                    color: ({ palette: { mode, grey, text } }) =>
+                      mode === "dark" ? grey[600] : text.secondary || grey[600],
+                    fontSize: { xs: "0.8rem", md: "0.875rem" },
+                  }}
                 >
                   {transaction.date}
                 </MKTypography>
@@ -385,7 +406,8 @@ function Home() {
                 variant="h6"
                 fontWeight="bold"
                 sx={{
-                  color: transaction.amount > 0 ? "#4CAF50" : "#ffffff",
+                  color: ({ palette: { mode, success, text } }) =>
+                    transaction.amount > 0 ? success.main || "#4CAF50" : text.main,
                   fontSize: { xs: "1rem", md: "1.25rem" },
                 }}
               >
