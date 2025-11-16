@@ -686,12 +686,16 @@ function Home() {
                   variant="h6"
                   fontWeight="bold"
                   sx={{
-                    color: ({ palette: { mode, success, text } }) =>
-                      transaction.amount > 0 ? success.main || "#4CAF50" : text.main,
+                    color: ({ palette: { mode, success, error, text } }) => {
+                      // If transaction has payment_method, it's a payment (expense) - show in red
+                      // Otherwise, it's a credit/load (income) - show in green
+                      const isPayment = !!transaction.payment_method;
+                      return isPayment ? error.main || "#F44335" : success.main || "#4CAF50";
+                    },
                     fontSize: { xs: "1rem", md: "1.25rem" },
                   }}
                 >
-                  {transaction.amount > 0 ? "+" : ""}
+                  {transaction.payment_method ? "-" : "+"}
                   {formatCurrency(Math.abs(transaction.amount))}
                 </MKTypography>
               </MKBox>
