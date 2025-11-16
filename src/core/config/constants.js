@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   TOKEN: "token",
   USER: "user",
   THEME: "theme",
+  THEME_MODE: "themeMode",
   RECENT_SEARCHES: "recentSearches",
 };
 
@@ -37,6 +38,8 @@ export const ROUTES = {
   TRANSACTIONS: "/transactions",
   EVENTS: "/events",
   RESTAURANTS: "/restaurants",
+  MARKETPLACE: "/marketplace",
+  VENDOR_DETAIL: "/marketplace/vendor",
 };
 
 export const PAGINATION = {

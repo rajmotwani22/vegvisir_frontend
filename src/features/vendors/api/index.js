@@ -1,8 +1,7 @@
 /**
 =========================================================
-* Core Context - Export Point
+* Vendors API - Export Point
 =========================================================
 */
 
-export * from "./AuthContext";
-export * from "./ThemeContext";
+export { vendorAPI } from "./vendorEndpoints";

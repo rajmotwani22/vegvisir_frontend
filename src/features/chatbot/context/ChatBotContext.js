@@ -15,6 +15,7 @@ const ChatBotContext = createContext(null);
 export const ChatBotProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const botName = "Lumina"; // Static bot name
   const messagesRef = useRef(messages);
 
   // Keep ref in sync with state
@@ -60,6 +61,7 @@ export const ChatBotProvider = ({ children }) => {
         role: "assistant",
         content: response.data.response,
         timestamp: response.data.timestamp,
+        model_name: response.data.model_name,
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
@@ -87,6 +89,7 @@ export const ChatBotProvider = ({ children }) => {
     sendMessage,
     loading,
     clearMessages,
+    botName,
   };
 
   return <ChatBotContext.Provider value={value}>{children}</ChatBotContext.Provider>;

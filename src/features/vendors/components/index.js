@@ -1,8 +1,7 @@
 /**
 =========================================================
-* Core Context - Export Point
+* Vendors Components - Export Point
 =========================================================
 */
 
-export * from "./AuthContext";
-export * from "./ThemeContext";
+export { default as VendorCard } from "./VendorCard";

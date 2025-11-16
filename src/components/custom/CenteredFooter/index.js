@@ -32,6 +32,9 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import MKBox from "components/base/MKBox";
 import MKTypography from "components/base/MKTypography";
 
+// Core
+import { useTheme } from "core/context";
+
 function CenteredFooter({
   company = { href: "https://www.creative-tim.com/", name: "Creative Tim" },
   links = [
@@ -60,6 +63,7 @@ function CenteredFooter({
   ],
   light = false,
 }) {
+  const { mode } = useTheme();
   const { href, name } = company;
 
   const year = new Date().getFullYear();
@@ -70,8 +74,14 @@ function CenteredFooter({
       component={Link}
       href={link.href}
       variant="body2"
-      color={light ? "white" : "secondary"}
-      fontWeight="regular"
+      sx={{
+        color: ({ palette: { mode, text } }) =>
+          mode === "dark" ? text.main : text.secondary || "#7b809a",
+        fontWeight: "regular",
+        "&:hover": {
+          color: ({ palette: { primary } }) => primary.main,
+        },
+      }}
     >
       {link.name}
     </MKTypography>
@@ -83,8 +93,14 @@ function CenteredFooter({
       component={Link}
       href={social.link}
       variant="body2"
-      color={light ? "white" : "secondary"}
-      fontWeight="regular"
+      sx={{
+        color: ({ palette: { mode, text } }) =>
+          mode === "dark" ? text.main : text.secondary || "#7b809a",
+        fontWeight: "regular",
+        "&:hover": {
+          color: ({ palette: { primary } }) => primary.main,
+        },
+      }}
     >
       {social.icon}
     </MKTypography>
@@ -110,7 +126,13 @@ function CenteredFooter({
           </Stack>
         </Grid>
         <Grid item xs={12} lg={8} sx={{ textAlign: "center" }}>
-          <MKTypography variant="body2" color={light ? "white" : "secondary"}>
+          <MKTypography
+            variant="body2"
+            sx={{
+              color: ({ palette: { mode, text } }) =>
+                mode === "dark" ? text.main : text.secondary || "#7b809a",
+            }}
+          >
             Copyright &copy; {year} Material by{" "}
             <MKTypography
               component={Link}
@@ -118,7 +140,13 @@ function CenteredFooter({
               target="_blank"
               rel="noreferrer"
               variant="body2"
-              color={light ? "white" : "secondary"}
+              sx={{
+                color: ({ palette: { mode, text } }) =>
+                  mode === "dark" ? text.main : text.secondary || "#7b809a",
+                "&:hover": {
+                  color: ({ palette: { primary } }) => primary.main,
+                },
+              }}
             >
               {name}
             </MKTypography>
