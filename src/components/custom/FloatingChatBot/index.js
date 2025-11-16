@@ -65,7 +65,7 @@ function FloatingChatBot() {
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const { messages, sendMessage, loading, clearMessages } = useChatBot();
+  const { messages, sendMessage, loading, clearMessages, botName } = useChatBot();
   const { snackbar, showSnackbar, closeSnackbar } = useSnackbar();
 
   const scrollToBottom = () => {
@@ -217,7 +217,7 @@ function FloatingChatBot() {
             <MKBox display="flex" alignItems="center" gap={1}>
               <SmartToyIcon />
               <MKTypography variant="h6" fontWeight="bold">
-                Chat Assistant
+                Chat Assistant - {botName}
               </MKTypography>
             </MKBox>
             <MKBox display="flex" gap={0.5}>

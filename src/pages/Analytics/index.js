@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
 // @mui material components
 import Container from "@mui/material/Container";
@@ -23,6 +23,7 @@ import TextField from "@mui/material/TextField";
 import LinearProgress from "@mui/material/LinearProgress";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import { useTheme as useMUITheme } from "@mui/material/styles";
 
 // @mui icons
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -41,10 +42,24 @@ import MKButton from "components/base/MKButton";
 // Features
 import { useTransactionAnalytics } from "features/transactions";
 
+// Recharts components
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+
 function Analytics() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const { analytics, loading, error, fetchAnalytics } = useTransactionAnalytics();
+  const muiTheme = useMUITheme();
+  const isDarkMode = muiTheme.palette.mode === "dark";
 
   // Set default date range to current month
   useEffect(() => {
@@ -144,6 +159,89 @@ function Analytics() {
     analytics?.spending_by_category?.length > 0
       ? analytics.spending_by_category.reduce((max, item) => (item.total > max.total ? item : max))
       : null;
+
+  // Calculate future projections based on historical patterns
+  const calculateProjections = (historicalData, daysToProject = 7) => {
+    if (!historicalData || historicalData.length === 0) return [];
+
+    // Use average of recent days (last 7 or all if less than 7)
+    const recentDays = historicalData.slice(-7);
+    const average = recentDays.reduce((sum, item) => sum + item.total, 0) / recentDays.length;
+
+    // Calculate trend using simple linear regression
+    const n = historicalData.length;
+    const xValues = historicalData.map((_, i) => i);
+    const yValues = historicalData.map((item) => item.total);
+
+    const sumX = xValues.reduce((a, b) => a + b, 0);
+    const sumY = yValues.reduce((a, b) => a + b, 0);
+    const sumXY = xValues.reduce((sum, x, i) => sum + x * yValues[i], 0);
+    const sumXX = xValues.reduce((sum, x) => sum + x * x, 0);
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    // Generate future dates and projected values
+    const projections = [];
+    const lastDate = new Date(historicalData[historicalData.length - 1].period);
+
+    for (let i = 1; i <= daysToProject; i++) {
+      const futureDate = new Date(lastDate);
+      futureDate.setDate(futureDate.getDate() + i);
+
+      // Project using trend line, but don't go below 0
+      const projectedValue = slope * (n + i - 1) + intercept;
+      // Use average if trend gives negative or very low values
+      const finalValue = projectedValue > 0 ? Math.max(projectedValue, average * 0.5) : average;
+
+      projections.push({
+        period: futureDate.toISOString(),
+        total: finalValue,
+        isProjected: true,
+      });
+    }
+
+    return projections;
+  };
+
+  // Format date for chart (short format)
+  const formatDateForChart = (dateString) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    } catch (error) {
+      return "";
+    }
+  };
+
+  // Prepare chart data with historical and projected values
+  const chartData = useMemo(() => {
+    if (!analytics?.spending_over_time || analytics.spending_over_time.length === 0) return [];
+
+    const historical = analytics.spending_over_time.map((item) => ({
+      date: formatDateForChart(item.period),
+      dateFull: item.period,
+      spending: item.total,
+      projected: null,
+      isProjected: false,
+    }));
+
+    const projections = calculateProjections(analytics.spending_over_time, 7);
+    const projected = projections.map((item) => ({
+      date: formatDateForChart(item.period),
+      dateFull: item.period,
+      spending: null,
+      projected: item.total,
+      isProjected: true,
+    }));
+
+    // Combine historical and projected data
+    return [...historical, ...projected];
+  }, [analytics]);
 
   return (
     <Container maxWidth={false} sx={{ px: 0 }}>
@@ -494,6 +592,132 @@ function Analytics() {
                 </Card>
               </Grid>
             </Grid>
+          </MKBox>
+
+          {/* Daily Spending Graph with Projections */}
+          <MKBox mb={4} sx={{ px: 3 }}>
+            <Card
+              sx={{
+                p: 4,
+                borderRadius: 3,
+                boxShadow: ({ palette: { mode } }) =>
+                  mode === "dark" ? "0 8px 32px rgba(0,0,0,0.3)" : "0 8px 32px rgba(0,0,0,0.1)",
+                background: ({ palette: { mode } }) =>
+                  mode === "dark" ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.8)",
+                border: ({ palette: { mode } }) =>
+                  mode === "dark" ? "1px solid rgba(255,255,255,0.1)" : "none",
+              }}
+            >
+              <MKBox display="flex" alignItems="center" mb={3}>
+                <MKBox
+                  sx={{
+                    p: 1.5,
+                    borderRadius: 2,
+                    backgroundColor: ({ palette: { mode } }) =>
+                      mode === "dark" ? "rgba(233, 30, 99, 0.2)" : "rgba(233, 30, 99, 0.1)",
+                    mr: 1.5,
+                  }}
+                >
+                  <TrendingUpIcon sx={{ fontSize: 28, color: "error.main" }} />
+                </MKBox>
+                <MKTypography variant="h5" fontWeight="bold">
+                  Daily Spending Trend & Projection
+                </MKTypography>
+              </MKBox>
+
+              {chartData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 60 }}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke={isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}
+                    />
+                    <XAxis
+                      dataKey="date"
+                      angle={-45}
+                      textAnchor="end"
+                      height={80}
+                      tick={{ fill: isDarkMode ? "#fff" : "#000" }}
+                    />
+                    <YAxis
+                      tick={{ fill: isDarkMode ? "#fff" : "#000" }}
+                      label={{
+                        value: "Spending ($)",
+                        angle: -90,
+                        position: "insideLeft",
+                        style: {
+                          textAnchor: "middle",
+                          fill: isDarkMode ? "#fff" : "#000",
+                        },
+                      }}
+                    />
+                    <Tooltip
+                      formatter={(value, name) => {
+                        if (value === null) return null;
+                        return [
+                          formatCurrency(value),
+                          name === "spending" ? "Historical" : "Projected",
+                        ];
+                      }}
+                      labelFormatter={(label) => `Date: ${label}`}
+                      contentStyle={{
+                        backgroundColor: isDarkMode
+                          ? "rgba(30, 30, 30, 0.95)"
+                          : "rgba(255, 255, 255, 0.95)",
+                        border: isDarkMode
+                          ? "1px solid rgba(255,255,255,0.2)"
+                          : "1px solid rgba(0,0,0,0.2)",
+                        borderRadius: 8,
+                        color: isDarkMode ? "#fff" : "#000",
+                      }}
+                    />
+                    <Legend
+                      wrapperStyle={{
+                        paddingTop: 20,
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="spending"
+                      stroke="#e91e63"
+                      strokeWidth={3}
+                      dot={{ r: 4, fill: "#e91e63" }}
+                      activeDot={{ r: 6 }}
+                      name="Historical Spending"
+                      connectNulls={false}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="projected"
+                      stroke="#2196f3"
+                      strokeWidth={3}
+                      strokeDasharray="5 5"
+                      dot={{ r: 4, fill: "#2196f3" }}
+                      activeDot={{ r: 6 }}
+                      name="Projected Spending"
+                      connectNulls={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <MKBox
+                  p={4}
+                  textAlign="center"
+                  sx={{
+                    borderRadius: 2,
+                    backgroundColor: ({ palette: { mode } }) =>
+                      mode === "dark" ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)",
+                  }}
+                >
+                  <TrendingUpIcon
+                    sx={{ fontSize: 48, color: "text.secondary", mb: 1, opacity: 0.5 }}
+                  />
+                  <MKTypography variant="body2" color="text.secondary">
+                    No spending data available for chart
+                  </MKTypography>
+                </MKBox>
+              )}
+            </Card>
           </MKBox>
 
           <Grid container spacing={4} sx={{ px: 3 }}>
