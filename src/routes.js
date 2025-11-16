@@ -76,4 +76,9 @@ export const dashboardRoutes = [
     icon: <Icon>shopping_cart</Icon>,
     route: ROUTES.ORDER,
   },
+  {
+    name: "Map",
+    icon: <Icon>map</Icon>,
+    route: ROUTES.MAP,
+  },
 ];

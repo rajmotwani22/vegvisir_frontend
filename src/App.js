@@ -59,6 +59,7 @@ import CardsPage from "pages/Cards";
 import TransactionsPage from "pages/Transactions";
 import OrderPage from "pages/Order";
 import VendorDetailPage from "pages/VendorDetail";
+import MapPage from "pages/Map";
 
 // Images
 import signinImage from "assets/images/illustrations/illustration-signin.jpg";
@@ -156,6 +157,7 @@ export default function App() {
                       <Route path="/transactions" element={<TransactionsPage />} />
                       <Route path="/order" element={<OrderPage />} />
                       <Route path="/order/vendor/:id" element={<VendorDetailPage />} />
+                      <Route path="/map" element={<MapPage />} />
                       <Route path="/" element={<Navigate to={ROUTES.HOME} replace />} />
                       <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
                     </Routes>

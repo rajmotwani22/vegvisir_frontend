@@ -37,6 +37,7 @@ export const ROUTES = {
   TRANSACTIONS: "/transactions",
   ORDER: "/order",
   VENDOR_DETAIL: "/order/vendor",
+  MAP: "/map",
 };
 
 export const PAGINATION = {
