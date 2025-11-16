@@ -61,6 +61,7 @@ import Icon from "@mui/material/Icon";
 import { useWallet } from "features/wallet";
 import { useCards } from "features/cards";
 import { useTransactions } from "features/transactions";
+import { useRewards } from "features/rewards";
 
 // Shared hooks
 import { useSnackbar } from "shared/hooks";
@@ -90,6 +91,7 @@ function Home() {
   const { cards, loading: cardsLoading } = useCards();
   const { snackbar, showSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useAuth();
+  const { balance: rewardsBalance, loading: rewardsLoading } = useRewards();
 
   // Fetch top 10 recent transactions
   const {
@@ -226,6 +228,39 @@ function Home() {
         minHeight: "100vh",
       }}
     >
+      {/* Rewards Balance Section */}
+      <MKBox mb={3} sx={{ px: { xs: 0, sm: 1, md: 3 } }}>
+        <Card
+          sx={{
+            p: 3,
+            borderRadius: 3,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            border: "1px solid rgba(0,0,0,0.05)",
+            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+            color: "white",
+          }}
+        >
+          <MKBox display="flex" alignItems="center" justifyContent="space-between">
+            <MKBox>
+              <MKTypography variant="h6" fontWeight="medium" opacity={0.9} mb={1}>
+                Rewards Balance
+              </MKTypography>
+              {rewardsLoading ? (
+                <CircularProgress size={24} sx={{ color: "white", mt: 1 }} />
+              ) : (
+                <MKTypography variant="h3" fontWeight="bold" mt={1}>
+                  {formatCurrency(rewardsBalance)}
+                </MKTypography>
+              )}
+              <MKTypography variant="caption" opacity={0.8} mt={1} display="block">
+                Cashback earned from vendor payments
+              </MKTypography>
+            </MKBox>
+            <Icon sx={{ fontSize: 48, opacity: 0.3 }}>card_giftcard</Icon>
+          </MKBox>
+        </Card>
+      </MKBox>
+
       {/* Wallet Card Section */}
       <MKBox mb={{ xs: 4, md: 6 }} sx={{ px: { xs: 0, sm: 1, md: 3 } }}>
         <RutgersWalletCardFinal

@@ -5,8 +5,9 @@
 * Displays detailed information about a vendor and allows payment
 */
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import confetti from "canvas-confetti";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -20,6 +21,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Material Kit 2 PRO React components
 import MKBox from "components/base/MKBox";
@@ -28,7 +30,9 @@ import MKButton from "components/base/MKButton";
 
 // Features
 import { useVendorPayment } from "features/vendors";
+import { vendorAPI } from "features/vendors";
 import { useWallet } from "features/wallet";
+import { useRewards } from "features/rewards";
 
 // Core
 import { ROUTES } from "core/config";
@@ -42,9 +46,13 @@ function VendorDetailPage() {
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [earnedReward, setEarnedReward] = useState(null);
+  const [isPolling, setIsPolling] = useState(false);
+  const [paymentError, setPaymentError] = useState(null);
 
   const { createPayment, loading, error } = useVendorPayment();
-  const { balance, loading: walletLoading } = useWallet();
+  const { balance, loading: walletLoading, refetch: refetchWallet } = useWallet();
+  const { refetchBalance: refetchRewards } = useRewards();
 
   const getCategoryIcon = (category) => {
     switch (category) {
@@ -61,6 +69,48 @@ function VendorDetailPage() {
     }
   };
 
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+
+      // Launch confetti from multiple positions
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+      });
+    }, 250);
+
+    // Big burst at the start
+    setTimeout(() => {
+      confetti({
+        ...defaults,
+        particleCount: 100,
+        origin: { x: 0.5, y: 0.5 },
+        colors: ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8"],
+      });
+    }, 0);
+  };
+
   const handleOpenPaymentDialog = () => {
     setPaymentDialogOpen(true);
     setDescription(`Payment to ${vendor.name}`);
@@ -71,6 +121,9 @@ function VendorDetailPage() {
     setAmount("");
     setDescription("");
     setPaymentSuccess(false);
+    setEarnedReward(null);
+    setIsPolling(false);
+    setPaymentError(null);
   };
 
   const handlePayment = async () => {
@@ -88,12 +141,96 @@ function VendorDetailPage() {
     const result = await createPayment(paymentData);
 
     if (result.success) {
-      setPaymentSuccess(true);
-      // Close dialog after 2 seconds and navigate back
-      setTimeout(() => {
-        handleClosePaymentDialog();
-        navigate(ROUTES.MARKETPLACE);
-      }, 2000);
+      const payment = result.data;
+
+      // Check if payment status is pending
+      if (payment.status === "pending") {
+        // Poll for payment completion
+        setIsPolling(true);
+        const paymentId = payment.id;
+        let attempts = 0;
+        const maxAttempts = 30; // 30 attempts = 15 seconds max
+        const pollInterval = 500; // Poll every 500ms
+
+        const pollPaymentStatus = async () => {
+          try {
+            const statusResponse = await vendorAPI.getPaymentById(paymentId);
+            const updatedPayment = statusResponse.data;
+
+            if (updatedPayment.status === "completed") {
+              setIsPolling(false);
+              setPaymentSuccess(true);
+
+              // Check if reward information is in the response
+              if (updatedPayment.reward) {
+                setEarnedReward(updatedPayment.reward);
+                // Trigger confetti celebration
+                triggerConfetti();
+              }
+
+              // Refresh wallet and rewards balance
+              await refetchWallet();
+              await refetchRewards();
+
+              // Close dialog after 3 seconds and navigate back
+              setTimeout(() => {
+                handleClosePaymentDialog();
+                navigate(ROUTES.MARKETPLACE);
+              }, 3000);
+            } else if (updatedPayment.status === "failed") {
+              setIsPolling(false);
+              setPaymentError("Payment failed. Please try again.");
+              setPaymentSuccess(false);
+            } else if (attempts < maxAttempts) {
+              // Still pending, poll again
+              attempts++;
+              setTimeout(pollPaymentStatus, pollInterval);
+            } else {
+              // Timeout - payment is taking too long
+              setIsPolling(false);
+              setPaymentError(
+                "Payment is taking longer than expected. Please check your transactions."
+              );
+              setPaymentSuccess(false);
+            }
+          } catch (err) {
+            console.error("Error polling payment status:", err);
+            if (attempts < maxAttempts) {
+              attempts++;
+              setTimeout(pollPaymentStatus, pollInterval);
+            } else {
+              setIsPolling(false);
+              setPaymentError("Unable to verify payment status. Please check your transactions.");
+              setPaymentSuccess(false);
+            }
+          }
+        };
+
+        // Start polling
+        setTimeout(pollPaymentStatus, pollInterval);
+      } else if (payment.status === "completed") {
+        // Payment completed immediately
+        setPaymentSuccess(true);
+
+        // Check if reward information is in the response
+        if (payment.reward) {
+          setEarnedReward(payment.reward);
+          // Trigger confetti celebration
+          triggerConfetti();
+        }
+
+        // Refresh wallet and rewards balance
+        await refetchWallet();
+        await refetchRewards();
+
+        // Close dialog after 3 seconds and navigate back
+        setTimeout(() => {
+          handleClosePaymentDialog();
+          navigate(ROUTES.MARKETPLACE);
+        }, 3000);
+      } else if (payment.status === "failed") {
+        setPaymentError("Payment failed. Please try again.");
+      }
     }
   };
 
@@ -255,15 +392,90 @@ function VendorDetailPage() {
           </MKTypography>
         </DialogTitle>
         <DialogContent>
-          {paymentSuccess ? (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              Payment successful! Redirecting...
-            </Alert>
+          {isPolling ? (
+            <MKBox>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                <MKBox display="flex" alignItems="center" gap={2}>
+                  <CircularProgress size={20} />
+                  <MKTypography variant="body1">Processing payment... Please wait.</MKTypography>
+                </MKBox>
+              </Alert>
+            </MKBox>
+          ) : paymentSuccess ? (
+            <MKBox>
+              <Alert severity="success" sx={{ mb: 2 }}>
+                Payment successful! Redirecting...
+              </Alert>
+              {earnedReward && (
+                <Alert
+                  severity="info"
+                  sx={{
+                    mb: 2,
+                    backgroundColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                    background:
+                      "linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%)",
+                    border: "2px solid rgba(102, 126, 234, 0.5)",
+                    borderRadius: 3,
+                    animation: "pulse 0.5s ease-in-out",
+                    "@keyframes pulse": {
+                      "0%": { transform: "scale(1)" },
+                      "50%": { transform: "scale(1.02)" },
+                      "100%": { transform: "scale(1)" },
+                    },
+                  }}
+                >
+                  <MKBox>
+                    <MKBox display="flex" alignItems="center" gap={1} mb={1.5}>
+                      <MKTypography variant="h5" fontWeight="bold" sx={{ fontSize: "1.75rem" }}>
+                        🎉
+                      </MKTypography>
+                      <MKTypography variant="h6" fontWeight="bold" color="primary">
+                        You earned a reward!
+                      </MKTypography>
+                    </MKBox>
+                    <MKBox
+                      sx={{
+                        p: 2,
+                        borderRadius: 2,
+                        backgroundColor: "rgba(255, 215, 0, 0.1)",
+                        border: "1px solid rgba(255, 215, 0, 0.3)",
+                        mb: 1.5,
+                      }}
+                    >
+                      <MKTypography variant="h4" fontWeight="bold" color="warning.main" mb={0.5}>
+                        ${parseFloat(earnedReward.amount || 0).toFixed(2)}
+                      </MKTypography>
+                      <MKTypography variant="body2" color="text.secondary">
+                        Reward Amount
+                      </MKTypography>
+                    </MKBox>
+                    <MKBox display="flex" gap={2} flexWrap="wrap">
+                      <MKBox>
+                        <MKTypography variant="caption" color="text.secondary" display="block">
+                          Cashback
+                        </MKTypography>
+                        <MKTypography variant="body2" fontWeight="bold" color="success.main">
+                          {(earnedReward.cashback_percentage * 100).toFixed(1)}%
+                        </MKTypography>
+                      </MKBox>
+                      <MKBox>
+                        <MKTypography variant="caption" color="text.secondary" display="block">
+                          Expires
+                        </MKTypography>
+                        <MKTypography variant="body2" fontWeight="bold">
+                          {new Date(earnedReward.expires_at).toLocaleDateString()}
+                        </MKTypography>
+                      </MKBox>
+                    </MKBox>
+                  </MKBox>
+                </Alert>
+              )}
+            </MKBox>
           ) : (
             <>
-              {error && (
+              {(error || paymentError) && (
                 <Alert severity="error" sx={{ mb: 2 }}>
-                  {error}
+                  {paymentError || error}
                 </Alert>
               )}
               <TextField
@@ -306,9 +518,11 @@ function VendorDetailPage() {
               variant="gradient"
               color="info"
               onClick={handlePayment}
-              disabled={loading || paymentSuccess || !amount || parseFloat(amount) <= 0}
+              disabled={
+                loading || paymentSuccess || isPolling || !amount || parseFloat(amount) <= 0
+              }
             >
-              {loading ? "Processing..." : "Confirm Payment"}
+              {loading || isPolling ? "Processing..." : "Confirm Payment"}
             </MKButton>
           </Box>
         </DialogActions>
