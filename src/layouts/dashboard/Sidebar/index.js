@@ -110,8 +110,13 @@ function Sidebar({ open, onClose }) {
           >
             <AccountCircleIcon />
           </Avatar>
-          <MKTypography variant="h6" fontWeight="bold" color="white">
-            Dashboard
+          <MKTypography
+            variant="h6"
+            fontWeight="bold"
+            color="white"
+            sx={{ textTransform: "uppercase" }}
+          >
+            Scarlet Pay
           </MKTypography>
         </MKBox>
         <Tooltip title="Close sidebar" arrow>
