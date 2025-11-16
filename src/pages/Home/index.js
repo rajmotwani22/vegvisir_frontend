@@ -137,6 +137,7 @@ function Home() {
   const [donationFormErrors, setDonationFormErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submittingDonation, setSubmittingDonation] = useState(false);
+  const [previousBalance, setPreviousBalance] = useState(null);
 
   const handleOpenDialog = () => {
     setFormData({
@@ -241,6 +242,9 @@ function Home() {
     try {
       setSubmittingDonation(true);
 
+      // Store previous balance before donation
+      setPreviousBalance(formatCurrency(balance));
+
       const donationData = await makeDonation(
         donationFormData.amount,
         donationFormData.description
@@ -267,6 +271,11 @@ function Home() {
       );
 
       handleCloseDonationDialog();
+
+      // Clear previous balance after animation completes (wait for animation to finish)
+      setTimeout(() => {
+        setPreviousBalance(null);
+      }, 3000); // Wait for full animation to complete
     } catch (err) {
       console.error("Error making donation:", err);
       showSnackbar(
@@ -404,6 +413,7 @@ function Home() {
         <RutgersWalletCardFinal
           userName={user?.full_name || user?.email || "User"}
           balance={formatCurrency(balance)}
+          previousBalance={previousBalance}
           expiryDate={null} // Will be calculated as 2 years from now
           onLoadMoney={handleOpenDialog}
           onRefresh={refetch}

@@ -1,9 +1,179 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
+
+// Slot Machine Digit Roller Component
+const SlotMachineDigit = ({ startDigit, targetDigit, isAnimating, delay = 0, duration = 2000 }) => {
+  const [displayDigit, setDisplayDigit] = useState(startDigit);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    if (isAnimating) {
+      const startValue = parseInt(startDigit) || 0;
+      const endValue = parseInt(targetDigit) || 0;
+      const startTime = Date.now() + delay;
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 0) {
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
+
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function for smooth deceleration
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        // Calculate current digit value (counting down from start to target)
+        const currentValue = Math.round(startValue + (endValue - startValue) * easeOut);
+
+        // Handle wrapping for digits (0-9)
+        let currentDigit = currentValue;
+        if (currentDigit < 0) {
+          currentDigit = 10 + (currentDigit % 10);
+        } else if (currentDigit > 9) {
+          currentDigit = currentDigit % 10;
+        }
+
+        if (progress < 1) {
+          setDisplayDigit(currentDigit);
+          animationRef.current = requestAnimationFrame(animate);
+        } else {
+          setDisplayDigit(endValue);
+        }
+      };
+
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      setDisplayDigit(targetDigit);
+    }
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isAnimating, startDigit, targetDigit, duration, delay]);
+
+  return displayDigit;
+};
+
+SlotMachineDigit.propTypes = {
+  startDigit: PropTypes.string.isRequired,
+  targetDigit: PropTypes.string.isRequired,
+  isAnimating: PropTypes.bool.isRequired,
+  delay: PropTypes.number,
+  duration: PropTypes.number,
+};
+
+// Slot Machine Number Roller Component
+const SlotMachineNumber = ({ startValue, targetValue, isAnimating, duration = 2000 }) => {
+  const [displayValue, setDisplayValue] = useState(startValue);
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    if (isAnimating) {
+      const start = parseFloat(startValue) || 0;
+      const end = parseFloat(targetValue) || 0;
+      const difference = end - start;
+      const startTime = Date.now();
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Easing function for smooth deceleration (slower at the end)
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+
+        const currentValue = start + difference * easeOut;
+        setDisplayValue(currentValue.toFixed(2));
+
+        if (progress < 1) {
+          animationRef.current = requestAnimationFrame(animate);
+        } else {
+          setDisplayValue(end.toFixed(2));
+        }
+      };
+
+      animationRef.current = requestAnimationFrame(animate);
+    } else {
+      setDisplayValue(targetValue);
+    }
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [isAnimating, startValue, targetValue, duration]);
+
+  // Format number with commas
+  const formatWithCommas = (num) => {
+    const numStr = parseFloat(num).toFixed(2);
+    const parts = numStr.split(".");
+    const integerPart = parts[0];
+    const decimalPart = parts[1];
+
+    // Add commas to integer part
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return `${formattedInteger}.${decimalPart}`;
+  };
+
+  const formattedValue = formatWithCommas(displayValue);
+  const startFormatted = formatWithCommas(startValue);
+  const targetFormatted = formatWithCommas(targetValue);
+
+  // Split into individual characters for slot machine effect
+  const chars = formattedValue.split("");
+  const startChars = startFormatted.split("");
+  const targetChars = targetFormatted.split("");
+
+  return (
+    <span style={{ display: "inline-block" }}>
+      {chars.map((char, index) => {
+        if (char === "," || char === ".") {
+          return <span key={index}>{char}</span>;
+        }
+
+        const startChar = startChars[index] || "0";
+        const targetChar = targetChars[index] || "0";
+        const delay = index * 30; // Stagger each digit
+
+        return (
+          <span
+            key={index}
+            style={{
+              display: "inline-block",
+              minWidth: "0.5em",
+              textAlign: "center",
+            }}
+          >
+            <SlotMachineDigit
+              startDigit={startChar}
+              targetDigit={targetChar}
+              isAnimating={isAnimating}
+              delay={delay}
+              duration={duration}
+            />
+          </span>
+        );
+      })}
+    </span>
+  );
+};
+
+SlotMachineNumber.propTypes = {
+  startValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  targetValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  isAnimating: PropTypes.bool.isRequired,
+  duration: PropTypes.number,
+};
 
 const RutgersWalletCardFinal = ({
   userName = "User",
   balance = "$0.00",
+  previousBalance = null,
   expiryDate = null,
   onLoadMoney,
   onRefresh,
@@ -15,7 +185,32 @@ const RutgersWalletCardFinal = ({
   const [cardBackground, setCardBackground] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
   const [showInfoDialog, setShowInfoDialog] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const backgroundInputRef = useRef(null);
+
+  // Extract numeric value from balance string (e.g., "$123.45" -> 123.45)
+  const extractNumericValue = (balanceStr) => {
+    if (!balanceStr) return 0;
+    const match = balanceStr.replace(/[^0-9.]/g, "");
+    return parseFloat(match) || 0;
+  };
+
+  const currentBalance = extractNumericValue(balance);
+  const prevBalance = previousBalance ? extractNumericValue(previousBalance) : null;
+
+  // Trigger animation when balance changes
+  useEffect(() => {
+    if (prevBalance !== null && prevBalance !== currentBalance && !isAnimating) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 2500); // Animation duration (slightly longer than slot machine animation)
+      return () => clearTimeout(timer);
+    } else if (prevBalance === null || prevBalance === currentBalance) {
+      // Reset animation state if balance matches or no previous balance
+      setIsAnimating(false);
+    }
+  }, [currentBalance, prevBalance, isAnimating]);
 
   // Calculate expiry date (2 years from now) if not provided
   const cardExpiryDate =
@@ -96,6 +291,12 @@ const RutgersWalletCardFinal = ({
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
+
+          @keyframes slotRoll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+          }
+
 
           @keyframes slide-up {
             0% { transform: translateY(10px); opacity: 0; }
@@ -464,9 +665,30 @@ const RutgersWalletCardFinal = ({
                       fontSize: "1.6rem",
                       textShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
                       lineHeight: 1.2,
+                      minHeight: "1.6rem",
+                      display: "flex",
+                      alignItems: "center",
+                      position: "relative",
+                      overflow: "visible",
                     }}
                   >
-                    {balance || "$0.00"}
+                    {isAnimating && prevBalance !== null ? (
+                      <span
+                        style={{
+                          display: "inline-block",
+                          position: "relative",
+                        }}
+                      >
+                        $
+                        <SlotMachineNumber
+                          startValue={prevBalance}
+                          targetValue={currentBalance}
+                          isAnimating={isAnimating}
+                        />
+                      </span>
+                    ) : (
+                      balance || "$0.00"
+                    )}
                   </div>
                 </div>
               </div>
@@ -999,6 +1221,7 @@ const RutgersWalletCardFinal = ({
 RutgersWalletCardFinal.propTypes = {
   userName: PropTypes.string,
   balance: PropTypes.string,
+  previousBalance: PropTypes.string,
   expiryDate: PropTypes.string,
   onLoadMoney: PropTypes.func,
   onRefresh: PropTypes.func,
