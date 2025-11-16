@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // @mui material components
 import Container from "@mui/material/Container";
@@ -50,6 +50,8 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import DescriptionIcon from "@mui/icons-material/Description";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 // Material Kit 2 PRO React components
 import MKBox from "components/base/MKBox";
@@ -138,6 +140,8 @@ function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [submittingDonation, setSubmittingDonation] = useState(false);
   const [previousBalance, setPreviousBalance] = useState(null);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const cardRefs = useRef([]);
 
   const handleOpenDialog = () => {
     setFormData({
@@ -366,6 +370,175 @@ function Home() {
     }
   };
 
+  // Sample card data for carousel - you can replace this with actual data from your API
+  // Note: First card uses actual balance from API, others use sample data
+  const walletCards = [
+    {
+      id: 1,
+      userName: user?.full_name || user?.email || "User",
+      balance: formatCurrency(balance), // This will be overridden in the component with actual balance
+      type: "Flex Dollars",
+      walletType: "VIRTUAL WALLET",
+      transactions: [
+        {
+          id: 1,
+          date: "Dec 15, 2024",
+          merchant: "Campus Dining Hall",
+          amount: -12.5,
+          type: "purchase",
+        },
+        {
+          id: 2,
+          date: "Dec 14, 2024",
+          merchant: "Bookstore",
+          amount: -45.99,
+          type: "purchase",
+        },
+        {
+          id: 3,
+          date: "Dec 13, 2024",
+          merchant: "Flex Dollars Load",
+          amount: 100.0,
+          type: "load",
+        },
+        {
+          id: 4,
+          date: "Dec 12, 2024",
+          merchant: "Campus Coffee Shop",
+          amount: -5.75,
+          type: "purchase",
+        },
+        {
+          id: 5,
+          date: "Dec 11, 2024",
+          merchant: "Laundry Services",
+          amount: -8.0,
+          type: "purchase",
+        },
+        {
+          id: 6,
+          date: "Dec 10, 2024",
+          merchant: "Flex Dollars Load",
+          amount: 50.0,
+          type: "load",
+        },
+      ],
+    },
+    {
+      id: 2,
+      userName: "President",
+      balance: formatCurrency(balance * 0.5), // Example: different balance
+      type: "Student Governing Association",
+      walletType: "SGA",
+      transactions: [
+        {
+          id: 1,
+          date: "Dec 15, 2024",
+          merchant: "Event Supplies - Fall Fest",
+          amount: -450.0,
+          type: "purchase",
+        },
+        {
+          id: 2,
+          date: "Dec 14, 2024",
+          merchant: "Student Council Meeting Catering",
+          amount: -125.5,
+          type: "purchase",
+        },
+        {
+          id: 3,
+          date: "Dec 13, 2024",
+          merchant: "SGA Budget Allocation",
+          amount: 2000.0,
+          type: "load",
+        },
+        {
+          id: 4,
+          date: "Dec 12, 2024",
+          merchant: "Office Supplies - SGA",
+          amount: -89.75,
+          type: "purchase",
+        },
+        {
+          id: 5,
+          date: "Dec 11, 2024",
+          merchant: "Speaker Honorarium",
+          amount: -500.0,
+          type: "purchase",
+        },
+        {
+          id: 6,
+          date: "Dec 10, 2024",
+          merchant: "SGA Budget Allocation",
+          amount: 1500.0,
+          type: "load",
+        },
+      ],
+    },
+    {
+      id: 3,
+      userName: "Treasurer",
+      balance: formatCurrency(balance * 1.2), // Example: different balance
+      type: "Program Board",
+      walletType: "PB",
+      transactions: [
+        {
+          id: 1,
+          date: "Dec 15, 2024",
+          merchant: "Concert Venue Rental",
+          amount: -1200.0,
+          type: "purchase",
+        },
+        {
+          id: 2,
+          date: "Dec 14, 2024",
+          merchant: "Artist Performance Fee",
+          amount: -2500.0,
+          type: "purchase",
+        },
+        {
+          id: 3,
+          date: "Dec 13, 2024",
+          merchant: "Program Board Budget",
+          amount: 5000.0,
+          type: "load",
+        },
+        {
+          id: 4,
+          date: "Dec 12, 2024",
+          merchant: "Sound Equipment Rental",
+          amount: -350.0,
+          type: "purchase",
+        },
+        {
+          id: 5,
+          date: "Dec 11, 2024",
+          merchant: "Marketing Materials",
+          amount: -175.25,
+          type: "purchase",
+        },
+        {
+          id: 6,
+          date: "Dec 10, 2024",
+          merchant: "Program Board Budget",
+          amount: 3000.0,
+          type: "load",
+        },
+      ],
+    },
+  ];
+
+  // Get transactions for the current card
+  const currentCardTransactions = walletCards[currentCardIndex]?.transactions || [];
+
+  const handlePreviousCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex === 0 ? walletCards.length - 1 : prevIndex - 1));
+  };
+
+  const handleNextCard = () => {
+    setCurrentCardIndex((prevIndex) => (prevIndex === walletCards.length - 1 ? 0 : prevIndex + 1));
+  };
+
   return (
     <Container
       maxWidth={false}
@@ -408,29 +581,424 @@ function Home() {
         </Card>
       </MKBox>
 
-      {/* Wallet Card Section */}
+      {/* Wallet Card Section with Carousel */}
       <MKBox mb={{ xs: 4, md: 6 }} sx={{ px: { xs: 0, sm: 1, md: 3 } }}>
-        <RutgersWalletCardFinal
-          userName={user?.full_name || user?.email || "User"}
-          balance={formatCurrency(balance)}
-          previousBalance={previousBalance}
-          expiryDate={null} // Will be calculated as 2 years from now
-          onLoadMoney={handleOpenDialog}
-          onRefresh={refetch}
-          onSendMoney={() => {
-            setOpenSendMoneyDialog(true);
+        <MKBox
+          sx={{
+            position: "relative",
+            maxWidth: "600px",
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            gap: { xs: 2, sm: 3 },
           }}
-          isLoading={walletLoading}
-          onAddClubCard={() => {
-            // TODO: Implement add club card functionality
-            showSnackbar(
-              "info",
-              "info",
-              "Coming Soon",
-              "Club card feature will be available soon!"
-            );
+        >
+          {/* Left Navigation Button - Outside */}
+          {walletCards.length > 1 && (
+            <MKBox
+              onClick={handlePreviousCard}
+              sx={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: { xs: "44px", sm: "56px" },
+                height: { xs: "44px", sm: "56px" },
+                flexShrink: 0,
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                boxShadow:
+                  "0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(204, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+                transition: "all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%)",
+                  transform: "scale(1.15)",
+                  boxShadow:
+                    "0 12px 32px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(204, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                  border: "1px solid rgba(255, 255, 255, 0.5)",
+                },
+                "&:active": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <ChevronLeftIcon
+                sx={{
+                  fontSize: { xs: "28px", sm: "32px" },
+                  color: "#CC0000",
+                  filter: "drop-shadow(0 2px 4px rgba(204, 0, 0, 0.2))",
+                }}
+              />
+            </MKBox>
+          )}
+
+          {/* Carousel Container */}
+          <MKBox
+            sx={{
+              position: "relative",
+              overflow: "hidden",
+              flex: 1,
+            }}
+          >
+            {/* Cards Container */}
+            <MKBox
+              sx={{
+                display: "flex",
+                transform: `translateX(-${currentCardIndex * 100}%)`,
+                transition: "transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                willChange: "transform",
+              }}
+            >
+              {walletCards.map((card, index) => (
+                <MKBox
+                  key={card.id}
+                  sx={{
+                    minWidth: "100%",
+                    flexShrink: 0,
+                    width: "100%",
+                  }}
+                >
+                  <RutgersWalletCardFinal
+                    ref={(el) => (cardRefs.current[index] = el)}
+                    userName={
+                      index === 0 ? user?.full_name || user?.email || "User" : card.userName
+                    }
+                    balance={index === 0 ? formatCurrency(balance) : card.balance}
+                    previousBalance={index === 0 ? previousBalance : null}
+                    expiryDate={null} // Will be calculated as 2 years from now
+                    onLoadMoney={handleOpenDialog}
+                    onRefresh={refetch}
+                    onSendMoney={() => {
+                      setOpenSendMoneyDialog(true);
+                    }}
+                    isLoading={walletLoading}
+                    hideButtons={true}
+                    walletType={card.walletType}
+                    cardTheme={index === 0 ? "white" : "black"}
+                    defaultBackground={
+                      index === 0
+                        ? "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&h=500&fit=crop&q=80"
+                        : index === 1
+                        ? "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=500&fit=crop&q=80"
+                        : null
+                    }
+                  />
+                </MKBox>
+              ))}
+            </MKBox>
+
+            {/* Carousel Indicators */}
+            {walletCards.length > 1 && (
+              <MKBox
+                sx={{
+                  position: "absolute",
+                  bottom: "24px",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  gap: "10px",
+                  alignItems: "center",
+                  zIndex: 10,
+                  padding: "8px 16px",
+                  borderRadius: "20px",
+                  background: "rgba(0, 0, 0, 0.3)",
+                  backdropFilter: "blur(10px)",
+                  WebkitBackdropFilter: "blur(10px)",
+                }}
+              >
+                {walletCards.map((_, index) => (
+                  <MKBox
+                    key={index}
+                    onClick={() => setCurrentCardIndex(index)}
+                    sx={{
+                      width: index === currentCardIndex ? "32px" : "10px",
+                      height: "10px",
+                      borderRadius: index === currentCardIndex ? "5px" : "50%",
+                      background:
+                        index === currentCardIndex
+                          ? "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)"
+                          : "rgba(255, 255, 255, 0.4)",
+                      cursor: "pointer",
+                      transition: "all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                      boxShadow:
+                        index === currentCardIndex
+                          ? "0 4px 12px rgba(204, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)"
+                          : "0 2px 4px rgba(0, 0, 0, 0.1)",
+                      "&:hover": {
+                        background:
+                          index === currentCardIndex
+                            ? "linear-gradient(135deg, #8b0000 0%, #CC0000 100%)"
+                            : "rgba(255, 255, 255, 0.7)",
+                        transform: "scale(1.2)",
+                        boxShadow:
+                          index === currentCardIndex
+                            ? "0 6px 16px rgba(204, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3)"
+                            : "0 4px 8px rgba(0, 0, 0, 0.2)",
+                      },
+                    }}
+                  />
+                ))}
+              </MKBox>
+            )}
+          </MKBox>
+
+          {/* Right Navigation Button - Outside */}
+          {walletCards.length > 1 && (
+            <MKBox
+              onClick={handleNextCard}
+              sx={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: { xs: "44px", sm: "56px" },
+                height: { xs: "44px", sm: "56px" },
+                flexShrink: 0,
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)",
+                backdropFilter: "blur(20px) saturate(180%)",
+                WebkitBackdropFilter: "blur(20px) saturate(180%)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+                boxShadow:
+                  "0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(204, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5)",
+                transition: "all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 100%)",
+                  transform: "scale(1.15)",
+                  boxShadow:
+                    "0 12px 32px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(204, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                  border: "1px solid rgba(255, 255, 255, 0.5)",
+                },
+                "&:active": {
+                  transform: "scale(1.05)",
+                },
+              }}
+            >
+              <ChevronRightIcon
+                sx={{
+                  fontSize: { xs: "28px", sm: "32px" },
+                  color: "#CC0000",
+                  filter: "drop-shadow(0 2px 4px rgba(204, 0, 0, 0.2))",
+                }}
+              />
+            </MKBox>
+          )}
+        </MKBox>
+
+        {/* Action Buttons Below Carousel - Fixed Position */}
+        <MKBox
+          sx={{
+            maxWidth: "480px",
+            margin: { xs: "16px auto 0", sm: "24px auto 0" },
+            px: { xs: 2, sm: 0 },
+            position: "relative",
+            zIndex: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: { xs: "12px", sm: "16px" },
+            transition: "all 0.3s ease",
           }}
-        />
+        >
+          {/* Pay Button - Main Button - Only show for Virtual Wallet (first card) */}
+          {currentCardIndex === 0 && (
+            <MKButton
+              onClick={() => setOpenSendMoneyDialog(true)}
+              disabled={walletLoading}
+              variant="gradient"
+              color="error"
+              fullWidth
+              sx={{
+                padding: { xs: "14px 24px", sm: "16px 32px" },
+                borderRadius: "20px",
+                fontSize: { xs: "0.9rem", sm: "1rem" },
+                fontWeight: 700,
+                letterSpacing: "0.5px",
+                background: "linear-gradient(135deg, #CC0000 0%, #8b0000 100%)",
+                boxShadow:
+                  "0 8px 24px rgba(204, 0, 0, 0.35), 0 4px 12px rgba(204, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                transition: "all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                textTransform: "none",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #8b0000 0%, #CC0000 100%)",
+                  boxShadow:
+                    "0 12px 32px rgba(204, 0, 0, 0.45), 0 6px 16px rgba(204, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3)",
+                  transform: "translateY(-2px)",
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+                "&:disabled": {
+                  opacity: 0.6,
+                },
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{ marginRight: "10px", filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))" }}
+              >
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+              Pay
+            </MKButton>
+          )}
+
+          {/* Refresh, Load Money, and Add Background Buttons */}
+          <MKBox sx={{ display: "flex", gap: { xs: "8px", sm: "12px" }, flexWrap: "wrap" }}>
+            <MKButton
+              onClick={refetch}
+              disabled={walletLoading}
+              variant="outlined"
+              color="error"
+              sx={{
+                flex: { xs: "1 1 auto", sm: 1 },
+                minWidth: { xs: "calc(50% - 4px)", sm: "auto" },
+                padding: { xs: "12px 16px", sm: "14px 24px" },
+                borderRadius: "18px",
+                fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                fontWeight: 700,
+                textTransform: "none",
+                background: "rgba(255, 255, 255, 0.9)",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(204, 0, 0, 0.2)",
+                color: "#CC0000",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(204, 0, 0, 0.1)",
+                transition: "all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                "&:hover": {
+                  background: "rgba(204, 0, 0, 0.05)",
+                  border: "2px solid rgba(204, 0, 0, 0.3)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(204, 0, 0, 0.15)",
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+                "&:disabled": {
+                  opacity: 0.5,
+                },
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{
+                  marginRight: "8px",
+                  animation: walletLoading ? "spin 1s linear infinite" : "none",
+                }}
+              >
+                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+              </svg>
+              Refresh
+            </MKButton>
+            {/* Load Money Button - Only show for Virtual Wallet (first card) */}
+            {currentCardIndex === 0 && (
+              <MKButton
+                onClick={handleOpenDialog}
+                disabled={walletLoading}
+                variant="outlined"
+                color="error"
+                sx={{
+                  flex: { xs: "1 1 auto", sm: 1 },
+                  minWidth: { xs: "calc(50% - 4px)", sm: "auto" },
+                  padding: { xs: "12px 16px", sm: "14px 24px" },
+                  borderRadius: "18px",
+                  fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                  fontWeight: 700,
+                  textTransform: "none",
+                  background: "rgba(255, 255, 255, 0.9)",
+                  backdropFilter: "blur(10px)",
+                  border: "2px solid rgba(204, 0, 0, 0.2)",
+                  color: "#CC0000",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(204, 0, 0, 0.1)",
+                  transition: "all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                  "&:hover": {
+                    background: "rgba(204, 0, 0, 0.05)",
+                    border: "2px solid rgba(204, 0, 0, 0.3)",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(204, 0, 0, 0.15)",
+                  },
+                  "&:active": {
+                    transform: "translateY(0)",
+                  },
+                  "&:disabled": {
+                    opacity: 0.5,
+                  },
+                }}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  style={{ marginRight: "8px" }}
+                >
+                  <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                Load Money
+              </MKButton>
+            )}
+            {/* Add Background Button */}
+            <MKButton
+              onClick={() => {
+                // Trigger background upload for the current card
+                if (cardRefs.current[currentCardIndex]) {
+                  cardRefs.current[currentCardIndex].triggerBackgroundUpload();
+                }
+              }}
+              variant="outlined"
+              color="error"
+              sx={{
+                flex: { xs: "1 1 auto", sm: 1 },
+                minWidth: { xs: "100%", sm: "auto" },
+                padding: { xs: "12px 16px", sm: "14px 24px" },
+                borderRadius: "18px",
+                fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                fontWeight: 700,
+                textTransform: "none",
+                background:
+                  "linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.12) 100%)",
+                backdropFilter: "blur(10px)",
+                border: "2px solid rgba(204, 0, 0, 0.25)",
+                color: "#CC0000",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(204, 0, 0, 0.12)",
+                transition: "all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)",
+                "&:hover": {
+                  background:
+                    "linear-gradient(135deg, rgba(204, 0, 0, 0.15) 0%, rgba(204, 0, 0, 0.2) 100%)",
+                  border: "2px solid rgba(204, 0, 0, 0.35)",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 6px 16px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(204, 0, 0, 0.2)",
+                },
+                "&:active": {
+                  transform: "translateY(0)",
+                },
+              }}
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                style={{ marginRight: "8px" }}
+              >
+                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+              </svg>
+              Add Background
+            </MKButton>
+          </MKBox>
+        </MKBox>
       </MKBox>
 
       {/* Send Money Dialog */}
@@ -858,16 +1426,21 @@ function Home() {
             }}
           >
             Recent Transactions
+            {currentCardIndex > 0
+              ? ` - ${walletCards[currentCardIndex]?.type || "Transactions"}`
+              : ""}
           </MKTypography>
-          <MKButton
-            variant="outlined"
-            color="info"
-            size="medium"
-            onClick={() => navigate(ROUTES.TRANSACTIONS)}
-            endIcon={<Icon>arrow_forward</Icon>}
-          >
-            View All Transactions
-          </MKButton>
+          {currentCardIndex === 0 && (
+            <MKButton
+              variant="outlined"
+              color="info"
+              size="medium"
+              onClick={() => navigate(ROUTES.TRANSACTIONS)}
+              endIcon={<Icon>arrow_forward</Icon>}
+            >
+              View All Transactions
+            </MKButton>
+          )}
         </MKBox>
         <Card
           sx={{
@@ -882,33 +1455,105 @@ function Home() {
             backgroundColor: ({ palette: { mode, grey, white } }) =>
               mode === "dark" ? grey[200] : white.main,
             color: ({ palette: { text } }) => text.main,
+            transition: "all 0.3s ease",
           }}
         >
-          {/* Recent Transactions */}
-          {transactionsLoading ? (
-            <MKBox display="flex" justifyContent="center" alignItems="center" py={6}>
-              <CircularProgress />
-            </MKBox>
-          ) : transactionsError ? (
-            <MKBox p={3} textAlign="center">
-              <MKTypography variant="body2" color="error">
-                Error loading transactions: {transactionsError}
-              </MKTypography>
-            </MKBox>
-          ) : recentTransactions.length === 0 ? (
-            <MKBox p={3} textAlign="center">
-              <MKTypography variant="body2" color="text.secondary">
-                No transactions found
-              </MKTypography>
-            </MKBox>
-          ) : (
-            recentTransactions.map((transaction, index) => (
+          {/* Transactions - Show API transactions for first card, sample transactions for others */}
+          {currentCardIndex === 0 ? (
+            // Actual transactions from API for Virtual Wallet
+            transactionsLoading ? (
+              <MKBox display="flex" justifyContent="center" alignItems="center" py={6}>
+                <CircularProgress />
+              </MKBox>
+            ) : transactionsError ? (
+              <MKBox p={3} textAlign="center">
+                <MKTypography variant="body2" color="error">
+                  Error loading transactions: {transactionsError}
+                </MKTypography>
+              </MKBox>
+            ) : recentTransactions.length === 0 ? (
+              <MKBox p={3} textAlign="center">
+                <MKTypography variant="body2" color="text.secondary">
+                  No transactions found
+                </MKTypography>
+              </MKBox>
+            ) : (
+              recentTransactions.map((transaction, index) => (
+                <MKBox
+                  key={transaction.id}
+                  sx={{
+                    p: { xs: 2, md: 3 },
+                    borderBottom: ({ palette: { mode, primary, grey } }) =>
+                      index < recentTransactions.length - 1
+                        ? mode === "dark"
+                          ? `1px solid rgba(204, 0, 0, 0.2)`
+                          : `1px solid ${grey[200]}`
+                        : "none",
+                    display: "flex",
+                    flexDirection: { xs: "column", sm: "row" },
+                    justifyContent: "space-between",
+                    alignItems: { xs: "flex-start", sm: "center" },
+                    gap: { xs: 1, sm: 0 },
+                    transition: "background 0.2s ease",
+                    "&:hover": {
+                      backgroundColor: ({ palette: { mode, primary, grey } }) =>
+                        mode === "dark" ? "rgba(204, 0, 0, 0.1)" : grey[100],
+                    },
+                  }}
+                >
+                  <MKBox sx={{ flex: 1, width: { xs: "100%", sm: "auto" } }}>
+                    <MKTypography
+                      variant="body1"
+                      fontWeight="bold"
+                      mb={0.5}
+                      sx={{
+                        color: ({ palette: { text } }) => text.main,
+                        fontSize: { xs: "0.9rem", md: "1rem" },
+                      }}
+                    >
+                      {transaction.description || "Transaction"}
+                    </MKTypography>
+                    <MKTypography
+                      variant="body2"
+                      sx={{
+                        color: ({ palette: { mode, grey, text } }) =>
+                          mode === "dark" ? grey[600] : text.secondary || grey[600],
+                        fontSize: { xs: "0.8rem", md: "0.875rem" },
+                      }}
+                    >
+                      {formatTransactionDate(
+                        transaction.transaction_date || transaction.created_at
+                      )}
+                    </MKTypography>
+                  </MKBox>
+                  <MKTypography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{
+                      color: ({ palette: { mode, success, error, text } }) => {
+                        // If transaction has payment_method, it's a payment (expense) - show in red
+                        // Otherwise, it's a credit/load (income) - show in green
+                        const isPayment = !!transaction.payment_method;
+                        return isPayment ? error.main || "#F44335" : success.main || "#4CAF50";
+                      },
+                      fontSize: { xs: "1rem", md: "1.25rem" },
+                    }}
+                  >
+                    {transaction.payment_method ? "-" : "+"}
+                    {formatCurrency(Math.abs(transaction.amount))}
+                  </MKTypography>
+                </MKBox>
+              ))
+            )
+          ) : // Sample transactions for other cards
+          currentCardTransactions.length > 0 ? (
+            currentCardTransactions.map((transaction, index) => (
               <MKBox
                 key={transaction.id}
                 sx={{
                   p: { xs: 2, md: 3 },
                   borderBottom: ({ palette: { mode, primary, grey } }) =>
-                    index < recentTransactions.length - 1
+                    index < currentCardTransactions.length - 1
                       ? mode === "dark"
                         ? `1px solid rgba(204, 0, 0, 0.2)`
                         : `1px solid ${grey[200]}`
@@ -935,7 +1580,7 @@ function Home() {
                       fontSize: { xs: "0.9rem", md: "1rem" },
                     }}
                   >
-                    {transaction.description || "Transaction"}
+                    {transaction.merchant}
                   </MKTypography>
                   <MKTypography
                     variant="body2"
@@ -945,27 +1590,40 @@ function Home() {
                       fontSize: { xs: "0.8rem", md: "0.875rem" },
                     }}
                   >
-                    {formatTransactionDate(transaction.transaction_date || transaction.created_at)}
+                    {transaction.date}
                   </MKTypography>
                 </MKBox>
                 <MKTypography
                   variant="h6"
                   fontWeight="bold"
                   sx={{
-                    color: ({ palette: { mode, success, error, text } }) => {
-                      // If transaction has payment_method, it's a payment (expense) - show in red
-                      // Otherwise, it's a credit/load (income) - show in green
-                      const isPayment = !!transaction.payment_method;
-                      return isPayment ? error.main || "#F44335" : success.main || "#4CAF50";
-                    },
+                    color: ({ palette: { mode, success, text } }) =>
+                      transaction.amount > 0 ? success.main || "#4CAF50" : text.main,
                     fontSize: { xs: "1rem", md: "1.25rem" },
                   }}
                 >
-                  {transaction.payment_method ? "-" : "+"}
+                  {transaction.amount > 0 ? "+" : ""}
                   {formatCurrency(Math.abs(transaction.amount))}
                 </MKTypography>
               </MKBox>
             ))
+          ) : (
+            <MKBox
+              sx={{
+                p: { xs: 4, md: 6 },
+                textAlign: "center",
+              }}
+            >
+              <MKTypography
+                variant="body1"
+                color="text.secondary"
+                sx={{
+                  fontSize: { xs: "0.9rem", md: "1rem" },
+                }}
+              >
+                No transactions found for this card
+              </MKTypography>
+            </MKBox>
           )}
         </Card>
       </MKBox>
