@@ -34,4 +34,13 @@ export const vendorAPI = {
   createPayment: (data) => {
     return apiClient.post("/api/v1/payments/", data);
   },
+
+  /**
+   * Get payment by ID
+   * @param {number} id - Payment ID
+   * @returns {Promise} Payment object
+   */
+  getPaymentById: (id) => {
+    return apiClient.get(`/api/v1/payments/${id}`);
+  },
 };

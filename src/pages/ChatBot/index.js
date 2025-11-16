@@ -60,7 +60,7 @@ function ChatBot() {
   const location = useLocation();
   const isFullscreen = location.pathname === ROUTES.CHATBOT_FULLSCREEN;
 
-  const { messages, sendMessage, loading, clearMessages } = useChatBot();
+  const { messages, sendMessage, loading, clearMessages, botName } = useChatBot();
   const { snackbar, showSnackbar, closeSnackbar } = useSnackbar();
 
   const handleFullscreenToggle = () => {
@@ -79,6 +79,13 @@ function ChatBot() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Update document title for fullscreen chatbot
+  useEffect(() => {
+    if (isFullscreen) {
+      document.title = `AI Chat Assistant - ${botName}`;
+    }
+  }, [isFullscreen, botName]);
 
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
@@ -143,10 +150,9 @@ function ChatBot() {
           height: "100vh",
           display: "flex",
           flexDirection: "column",
-          width: "calc(100% - 300px)", // Adjust width for left panel
+          width: "100%",
           margin: 0,
           padding: 0,
-          marginLeft: "300px", // Account for left panel
         },
       }
     : {
@@ -187,7 +193,7 @@ function ChatBot() {
             </MKAvatar>
             <MKBox>
               <MKTypography variant="h5" fontWeight="bold" color="white">
-                AI Chat Assistant
+                AI Chat Assistant - {botName}
               </MKTypography>
               <MKTypography variant="body2" color="white" sx={{ opacity: 0.9, mt: 0.25 }}>
                 Ask me anything! I&apos;m here to help.

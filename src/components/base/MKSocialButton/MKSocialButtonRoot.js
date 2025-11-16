@@ -69,12 +69,13 @@ export default styled(Button)(({ theme, ownerState }) => {
 
   return {
     backgroundColor: backgroundColorValue,
-    color: white.main,
+    color: "#000000",
     boxShadow: "none",
 
     "&:hover": {
       backgroundColor: focusedBackgroundColorValue,
       boxShadow: "none",
+      color: "#CC0000",
     },
 
     "&:focus:not(:hover)": {
@@ -82,11 +83,12 @@ export default styled(Button)(({ theme, ownerState }) => {
         ? socialMediaColors[color].dark
         : socialMediaColors.facebook.dark,
       boxShadow: "none",
+      color: "#000000",
     },
 
     "&:disabled": {
       backgroundColor: backgroundColorValue,
-      color: white.main,
+      color: "#666666",
     },
 
     ...(circular && circularStyles()),

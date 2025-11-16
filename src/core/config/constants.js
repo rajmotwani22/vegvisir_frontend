@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   TOKEN: "token",
   USER: "user",
   THEME: "theme",
+  THEME_MODE: "themeMode",
   RECENT_SEARCHES: "recentSearches",
 };
 
@@ -35,8 +36,8 @@ export const ROUTES = {
   CARDS: "/cards",
   WALLET: "/wallet",
   TRANSACTIONS: "/transactions",
-  ORDER: "/order",
-  VENDOR_DETAIL: "/order/vendor",
+  MARKETPLACE: "/marketplace",
+  VENDOR_DETAIL: "/marketplace/vendor",
   MAP: "/map",
 };
 

@@ -74,7 +74,7 @@ function DashboardLayout({ children }) {
         chatbot: "ChatBot",
         budgets: "Budgets",
         cards: "Cards",
-        order: "Order",
+        marketplace: "Marketplace",
         vendor: location.state?.vendor?.name || "Vendor",
       };
 
@@ -107,19 +107,21 @@ function DashboardLayout({ children }) {
         <Box
           id="dashboard-page-content"
           sx={{
-            mt: 8,
-            pt: 5,
-            pb: 12,
+            mt: { xs: 7, md: 8 },
+            pt: { xs: 2, md: 5 },
+            pb: { xs: 6, md: 12 },
             position: "relative",
             zIndex: 1,
             minHeight: "100vh",
-            backgroundColor: ({ palette: { grey } }) => grey[50],
+            backgroundColor: ({ palette: { background } }) => background.default,
           }}
         >
-          <Container>
-            <MKBox width={{ xs: "100%", md: "50%", lg: "25%" }} mb={3}>
-              <Breadcrumbs routes={getBreadcrumbRoutes()} />
-            </MKBox>
+          <Container maxWidth={false} sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+            {location.pathname !== "/home" && (
+              <MKBox width={{ xs: "100%", md: "50%", lg: "25%" }} mb={{ xs: 2, md: 3 }}>
+                <Breadcrumbs routes={getBreadcrumbRoutes()} />
+              </MKBox>
+            )}
             {children}
           </Container>
         </Box>
@@ -128,7 +130,8 @@ function DashboardLayout({ children }) {
           id="dashboard-footer"
           sx={{
             boxShadow: ({ boxShadows: { sm } }) => sm,
-            backgroundColor: ({ palette: { grey } }) => grey[50],
+            backgroundColor: ({ palette: { mode, background, grey, white } }) =>
+              mode === "dark" ? background.default : grey[50] || white.main,
           }}
         >
           <CenteredFooter />
