@@ -64,9 +64,6 @@ function CenteredFooter({
   light = false,
 }) {
   const { mode } = useTheme();
-  const { href, name } = company;
-
-  const year = new Date().getFullYear();
 
   const renderLinks = links.map((link) => (
     <MKTypography
@@ -133,24 +130,7 @@ function CenteredFooter({
                 mode === "dark" ? text.main : text.secondary || "#7b809a",
             }}
           >
-            Copyright &copy; {year} Material by{" "}
-            <MKTypography
-              component={Link}
-              href={href}
-              target="_blank"
-              rel="noreferrer"
-              variant="body2"
-              sx={{
-                color: ({ palette: { mode, text } }) =>
-                  mode === "dark" ? text.main : text.secondary || "#7b809a",
-                "&:hover": {
-                  color: ({ palette: { primary } }) => primary.main,
-                },
-              }}
-            >
-              {name}
-            </MKTypography>
-            .
+            Copyright 2025 Project by Vegvisir Team
           </MKTypography>
         </Grid>
       </Grid>
